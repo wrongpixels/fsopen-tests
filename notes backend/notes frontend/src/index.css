@@ -1,0 +1,35 @@
+h2 {
+    color: darkblue;
+    font-style: italic;
+    font-size:35px;
+    margin-left: 20px;
+}
+li{
+    color:gray;
+    font-size: 20px;
+    margin-top: 10px;
+ }
+.note{
+    color:green;
+    font-size: 20px;
+    margin-top: 10px;
+}
+.error {
+    color: red;
+    background: lightgrey;
+    font-size: 20px;
+    border-style: solid;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+.errorButton{
+    color: white;
+    background-color: indianred;
+    padding: 5px;
+    margin: 5px;
+}
+button{
+    color: white;
+    background-color: steelblue;
+}
