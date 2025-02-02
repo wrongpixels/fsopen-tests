@@ -1,0 +1,1 @@
+mongodb+srv://kevapaereo:<db_password>@fsopen-2025.voojz.mongodb.net/?retryWrites=true&w=majority&appName=fsopen-2025
