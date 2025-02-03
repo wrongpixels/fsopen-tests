@@ -9,7 +9,5 @@ GET {{url}}/notes/2
 #### POST NOTE
 POST {{url}}/notes
 Content-Type: application/json
-
-{
-"content": "Cats are cool"
-}
+#### DELETE NOTE
+DELETE {{url}}/notes/67a0e792bd710e0955d32a4e
