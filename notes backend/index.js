@@ -11,6 +11,25 @@ const requestLogger = (req, res, next) =>{
     next();
 }
 
+const errorHandler = (error, req, res, next) =>{
+    //console.log(error);
+    console.log("Hello?");
+    let handledError = null;
+    if (error.name === "CastError")
+    {
+        handledError = "Note ID is in the wrong format.";
+    }
+    if (error.name === "ValidationError")
+    {
+        handledError = error.message;
+    }
+    if (handledError)
+    {
+        return res.status(400).json({Error: handledError});
+    }
+    next (error);
+}
+
 const unknownEndpoint  = (req, res) => {
     res.status(404).json({"Error": "Bad request"});
 }
@@ -45,14 +64,14 @@ app.use(express.json());
 app.use(requestLogger);
 app.use(cors());
 app.use(express.static('dist'));
-app.post("/api/notes", (request, response) => {
+app.post("/api/notes", (request, response, next) => {
     const body = request.body;
     if (!body.content)
     {
         return response.status(400).json({"Error": "Note content can't be empty"});
     }
     const note = new Note({content: body.content, important: Boolean(body.important) || false});
-    note.save().then(newNote => response.json(newNote)).catch(error => response.json({"Error": "Couldn't create note"}));
+    note.save().then(newNote => response.json(newNote)).catch(error => next(error));
 });
 
 app.get('/', (request, response) => {
@@ -69,46 +88,48 @@ app.get("/api/notes", (request, response) =>{
     }
 );
 })
-app.get("/api/notes/:id", (request, response) => {
-    const id = request.params.id;
-    //const note = notes.find(note => note.id === id)
-    Note.findById(id).then(found => response.json(found)).catch(error =>
-        response.status(404).json({"Error":`Note ${id} was not found in server`}))
-})
-app.delete("/api/notes/:id", (request, response) => {
-    const id = request.params.id;
-    Note.findByIdAndDelete(id).then(result => {
-        if (!result)
-        {
-            return response.status(404).json({"Error": "Note not found!"})
-        }
-        response.status(204).end();
-    }).catch(error => response.status(404).json({"Error":"Note not found"}));
 
-   /* if (note)
+const handleResponse = (resp, found, code = -1) => {
+    if (!resp)
     {
-        notes = notes.filter(_note => _note !== note)
-        response.status(204).end();
+        return;
     }
-    else
+    if (!found)
     {
-        response.status(404).json("Note not found");
-    }*/
+        return resp.status(404).json({"Error":"Couldn't be found."})
+    }
+    if (code !== -1)
+    {
+        return resp.status(code).end();
+    }
+    return resp.json(found);
+}
+app.get("/api/notes/:id", (request, response, next) => {
+    const id = request.params.id;
+    Note.findById(id).then(found => handleResponse(response, found)).catch(error => {
+        console.log("Hello 0");
+        next(error)
+    })
+    }
+)
+app.delete("/api/notes/:id", (request, response, next) => {
+    const id = request.params.id;
+    Note.findByIdAndDelete(id).then(result => handleResponse(response, result, 204)).catch(error => next(error));
+
 })
-app.put("/api/notes/:id", (req, res) => {
+app.put("/api/notes/:id", (req, res, next) => {
     const body = req.body;
     if (!body)
     {
-        return res.status(400).json({"Error": "Not was empty"})
+        return res.status(400).json({"Error": "Note was empty"})
     }
     const id = req.params.id;
-    Note.findByIdAndUpdate(id, body, {new: true}).then(found => {
-        console.log("Updating note");
-        res.json(found)
-    }).catch(error =>
-        res.status(404).json({"Error":`Note ${id} was not found in server`}))
+    Note.findByIdAndUpdate(id, body, {new: true, runValidators: true, context: 'query'}).then(found => handleResponse(res, found)).catch(error =>
+        next(error))
 })
 app.use(unknownEndpoint);
+app.use(errorHandler);
+
 const getNoteByID = (id) => notes.find(note => note.id === id);
 
 app.listen(PORT, '0.0.0.0', () => {

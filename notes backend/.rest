@@ -6,8 +6,21 @@ GET {{url}}/notes
 ### GET ONE
 GET {{url}}/notes/2
 
+### EDIT EXISTING
+PUT {{url}}/notes/67a239669f6ccda13fbd07d9
+Content-Type: application/json
+
+{
+  "content": "Ahwwqqwqwh!",
+  "important": true
+}
+
 #### POST NOTE
 POST {{url}}/notes
 Content-Type: application/json
+
+{
+  "content": "Ahh!"
+}
 #### DELETE NOTE
-DELETE {{url}}/notes/67a0e792bd710e0955d32a4e
+DELETE {{url}}/notes/67a13845fd55435d1481fc59
