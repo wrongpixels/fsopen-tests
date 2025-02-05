@@ -1,12 +1,5 @@
-const mongoose = require("mongoose");
 
-const url = process.env.MONGODB_URI;
-
-mongoose.connect(url).then(res => {
-    console.log("Connected to MongoDB");
-}).catch(error => console.log("Error connecting to MongoDB", error.message));
-
-mongoose.set('strictQuery', false);
+const mongoose = require("mongoose")
 
 const noteSchema = new mongoose.Schema({
     content: {
@@ -16,7 +9,7 @@ const noteSchema = new mongoose.Schema({
     },
     important: Boolean
 });
-noteSchema.set("toJSON", {
+noteSchema.set('toJSON', {
     transform: (doc, ret) => {
         ret.id = ret._id;
         delete ret._id;
