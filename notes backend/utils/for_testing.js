@@ -8,7 +8,7 @@ const reverse = (string) => {
 
 
 const average = (array) => {
-    return array.reduce((acc, val) => acc + val, 0) / array.length;
+    return array.length === 0?0:array.reduce((acc, val) => acc + val, 0) / array.length;
 };
 
 module.exports = { average, reverse }
