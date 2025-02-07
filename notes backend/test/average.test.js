@@ -2,6 +2,8 @@ const {average} = require("../utils/for_testing")
 const {test, describe} = require("node:test")
 const equals = require("assert").strictEqual
 
+
+
 describe('average', () => {
     test('of one value is the value itself',
         () => equals(average([1]),1)
