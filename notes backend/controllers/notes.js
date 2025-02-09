@@ -22,7 +22,7 @@ router.post("/notes", (request, response, next) => {
         return response.status(400).json({"Error": "Note content can't be empty"});
     }
     const note = new Note({content: body.content, important: Boolean(body.important) || false});
-    note.save().then(newNote => response.json(newNote)).catch(error => next(error));
+    note.save().then(newNote => response.status(201).json(newNote)).catch(error => next(error));
 });
 router.get("/notes", (request, response) =>{
     //response.json(notes);
@@ -30,6 +30,10 @@ router.get("/notes", (request, response) =>{
             response.json(result);
         }
     );
+})
+router.get("/notes", async (request, response) =>{
+    const notes = await Note.find({})
+    response.json(notes)
 })
 router.get("/notes/:id", (request, response, next) => {
         const id = request.params.id;
