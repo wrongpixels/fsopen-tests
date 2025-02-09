@@ -1,3 +1,4 @@
+const logger = require("../utils/logger")
 const errorHandler = (error, req, res, next) =>{
     let handledError = null;
     if (error.name === "CastError")
@@ -20,10 +21,10 @@ const unknownEndpoint  = (req, res) => {
 
 module.exports = unknownEndpoint;
 const requestLogger = (req, res, next) =>{
-    console.log('Method', req.method);
-    console.log('Path', req.path);
-    console.log("Body", req.body);
-    console.log("--------")
+    logger.info('Method', req.method);
+    logger.info('Path', req.path);
+    logger.info("Body", req.body);
+    logger.info("--------")
     next();
 }
 module.exports = { errorHandler, requestLogger, unknownEndpoint }
