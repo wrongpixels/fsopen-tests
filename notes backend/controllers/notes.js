@@ -24,6 +24,22 @@ router.post("/notes", (request, response, next) => {
     const note = new Note({content: body.content, important: Boolean(body.important) || false});
     note.save().then(newNote => response.status(201).json(newNote)).catch(error => next(error));
 });
+
+router.post('/notes', async (req, res, next) => {
+    if (!req.body || !req.body.content)
+    {
+        return res.status(400).json({Error: 'Note was empty'})
+    }
+    try {
+        const newNote = new Note({content: req.body.content, important: req.body.important || false})
+        await newNote.save()
+        res.status(201).json(newNote)
+    }
+    catch (error){
+        next(error)
+    }
+})
+
 router.get("/notes", (request, response) =>{
     //response.json(notes);
     Note.find({}).then(result => {

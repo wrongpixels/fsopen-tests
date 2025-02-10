@@ -85,6 +85,30 @@ test('the first note is about HTTP methods', async () => {
     assert(contents[0].includes('HTML is easy'))
 })
 
+test.only('a specific note can be viewed', async () => {
+    const allNotes = await getAllNotesInDB()
+    const firstNote = allNotes[0]
+    const firstNoteByCall = await api
+        .get(`/api/notes/${firstNote.id}`)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+    assert.deepStrictEqual(firstNote, firstNoteByCall.body)
+})
+
+test.only('a note can be deleted', async () => {
+    const allNotes = await getAllNotesInDB()
+    const noteToDelete = allNotes[0]
+    await api
+        .delete(`/api/notes/${noteToDelete.id}`)
+        .expect(204)
+
+    const notesAtEnd = await getAllNotesInDB()
+    const noteExists = await notesAtEnd.find(n => n.content === noteToDelete.content)
+    assert(!noteExists)
+    assert.strictEqual(notesAtEnd.length, allNotes.length-1)
+
+})
+
 after(async () => {
     await mongoose.connection.close()
 })
