@@ -19,7 +19,6 @@ const unknownEndpoint  = (req, res) => {
     res.status(404).json({"Error": "Bad request"});
 }
 
-module.exports = unknownEndpoint;
 const requestLogger = (req, res, next) =>{
     logger.info('Method', req.method);
     logger.info('Path', req.path);

@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors")
 const middleware = require("./utils/middleware")
 const config = require("./utils/config")
+require("express-async-errors")
 const router = require("./controllers/notes")
 const mongoose = require("mongoose")
 const logger = require("./utils/logger")
