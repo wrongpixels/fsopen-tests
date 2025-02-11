@@ -1,1 +1,1 @@
-Test projects and some useful stuff
+Test projects, exercise practices and some useful stuff
