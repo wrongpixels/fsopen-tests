@@ -1,7 +1,7 @@
 const Note = require("../models/note")
 const router = require("express").Router()
 
-router.post('/notes', async (req, res) => {
+router.post('/', async (req, res) => {
     if (!req.body || !req.body.content)
     {
         return res.status(400).json({Error: "New not cannot be empty"})
@@ -10,11 +10,11 @@ router.post('/notes', async (req, res) => {
     const addedNote = await newNote.save()
     res.status(201).json(addedNote)
 })
-router.get("/notes", async (request, response) =>{
+router.get("/", async (request, response) =>{
     const notes = await Note.find({})
     response.json(notes)
 })
-router.get('/notes/:id', async (req, res) => {
+router.get('/:id', async (req, res) => {
     const id = req.params.id
     const targetNote = await Note.findById(id)
     if (!targetNote)
@@ -22,12 +22,12 @@ router.get('/notes/:id', async (req, res) => {
      }
     res.json(targetNote)
 })
-router.delete('/notes/:id', async (req, res) => {
+router.delete('/:id', async (req, res) => {
     const id = req.params.id;
     const noteToDelete = await Note.findByIdAndDelete(id)
     res.status(204).end()
 })
-router.put('/notes/:id', async (req, res) => {
+router.put('/:id', async (req, res) => {
     if (!req.body)
     {
         return res.status(400).json({Error: 'Note cannot be empty'})
