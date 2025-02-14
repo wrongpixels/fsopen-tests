@@ -39,7 +39,6 @@ describe('when there\s a user in database', () => {
             .expect(400)
             .expect('Content-Type', /application\/json/)
         const usersOnEnd = await helper.getAllUsersInDB()
-        console.log(result.body)
         assert(result.body.Error.includes('expected `username` to be unique'))
         assert.strictEqual(usersOnStart.length, usersOnEnd.length)
     })

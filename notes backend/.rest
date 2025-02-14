@@ -22,5 +22,15 @@ Content-Type: application/json
 {
   "content": "Ahh!"
 }
+
+### CREATE USER
+POST {{url}}/users
+Content-Type: application/json
+
+{
+    "username": "root",
+    "name": "Superuser",
+    "password": "salainen"
+}
 #### DELETE NOTE
 DELETE {{url}}/notes/67a13845fd55435d1481fc59

@@ -9,6 +9,10 @@ const errorHandler = (error, req, res, next) =>{
     {
         handledError = error.message;
     }
+    if (error.name === "MongoServerError" && error.message.includes("duplicate key error"))
+    {
+        handledError = 'expected `username` to be unique'
+    }
     if (handledError)
     {
         return res.status(400).json({Error: handledError});

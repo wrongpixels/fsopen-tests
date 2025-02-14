@@ -5,10 +5,8 @@ const router = require('express').Router()
 router.post('/', async (req, res) => {
     const {username, name, password} = req.body
     const existingUser = await User.findOne({username: `${username}`})
-    console.log('Looking for', username)
     if (existingUser)
     {
-        console.log("Found ONE")
         return res.status(400).json({
             Error: 'Server expected `username` to be unique'})
     }
@@ -19,6 +17,11 @@ router.post('/', async (req, res) => {
     })
     const savedUser = await newUser.save()
     res.status(201).json(savedUser)
+})
+
+router.get('/', async (req, res) => {
+    const allUsers = await User.find({})
+    res.status(200).json(allUsers)
 })
 
 module.exports =  router
