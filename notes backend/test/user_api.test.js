@@ -45,7 +45,19 @@ describe('when there\s a user in database', () => {
 
 })
 
-after(() => mongoose.connection.close())
+test('can delete if only one', async () => {
+    const allUsers = User.find({})
+    if (allUsers.length === 1)
+    {
+        const user = allUsers[0]
+        await api.delete(user.id).expect(201)
+    }
+
+})
+
+after(() => {
+    mongoose.connection.close()
+})
 
 
 

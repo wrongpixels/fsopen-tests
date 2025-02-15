@@ -1,4 +1,5 @@
 const Note = require("../models/note")
+const User = require('../models/user')
 const router = require("express").Router()
 
 router.post('/', async (req, res) => {
@@ -6,8 +7,15 @@ router.post('/', async (req, res) => {
     {
         return res.status(400).json({Error: "New not cannot be empty"})
     }
-    const newNote = new Note({content: req.body.content, important: req.body.important || false})
+    const user = await User.findById(req.body.userId)
+    const newNote = new Note({
+        content: req.body.content,
+        important: req.body.important || false,
+        user: user.id
+    })
     const addedNote = await newNote.save()
+    user.notes = user.notes.concat(addedNote._id)
+    await user.save()
     res.status(201).json(addedNote)
 })
 router.get("/", async (request, response) =>{

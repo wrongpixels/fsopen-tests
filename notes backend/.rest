@@ -20,7 +20,8 @@ POST {{url}}/notes
 Content-Type: application/json
 
 {
-  "content": "Ahh!"
+  "content": "Ahhaassaaa!",
+  "userId": "67b0ed9c40cc2177edae810a"
 }
 
 ### CREATE USER
@@ -32,5 +33,7 @@ Content-Type: application/json
     "name": "Superuser",
     "password": "salainen"
 }
+
+
 #### DELETE NOTE
 DELETE {{url}}/notes/67a13845fd55435d1481fc59

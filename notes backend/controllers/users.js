@@ -24,4 +24,10 @@ router.get('/', async (req, res) => {
     res.status(200).json(allUsers)
 })
 
+router.delete('/:id', async (req, res) => {
+    const id = req.params.id
+    await User.findByIdAndDelete(id)
+    res.status(201).end()
+})
+
 module.exports =  router
