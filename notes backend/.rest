@@ -20,7 +20,7 @@ POST {{url}}/notes
 Content-Type: application/json
 
 {
-  "content": "Ahhaassaaa!",
+  "content": "Reeeaaaaly?!",
   "userId": "67b0ed9c40cc2177edae810a"
 }
 
