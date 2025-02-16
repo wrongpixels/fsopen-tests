@@ -4,6 +4,7 @@ const mongoose = require("mongoose")
 const supertest = require("supertest")
 const app = require("../app")
 const Note = require("../models/note")
+const User = require('../models/user')
 const {initialNotes, getAllNotesInDB, nonExistingID} = require("./test_helpers")
 
 const api = supertest(app)
@@ -41,10 +42,13 @@ test('there are 2 notes', async () => {
 })
 
 test.only('a valid note can be added', async () => {
+    const users = await User.find({})
+    console.log('Usuarios disponibles:', users)
 
     const newNote = {
         content: "Such a new note",
-        important: false
+        important: false,
+        userId: users[0].id  // Usar el ID dinámicamente
     }
     await api.post('/api/notes')
         .send(newNote)

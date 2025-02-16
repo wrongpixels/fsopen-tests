@@ -15,6 +15,15 @@ Content-Type: application/json
   "important": true
 }
 
+### TRY LOGIN
+POST {{url}}/login
+Content-Type: application/json
+
+{
+  "username": "kevapaereo",
+  "password": "catworld"
+}
+
 #### POST NOTE
 POST {{url}}/notes
 Content-Type: application/json
@@ -32,6 +41,16 @@ Content-Type: application/json
     "username": "root",
     "name": "Superuser",
     "password": "salainen"
+}
+
+### CREATE USER
+POST {{url}}/users
+Content-Type: application/json
+
+{
+  "username": "kevapaereo",
+  "name": "Álvaro Moreno",
+  "password": "catworld"
 }
 
 
