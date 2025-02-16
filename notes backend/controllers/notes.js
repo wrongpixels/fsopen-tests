@@ -19,7 +19,7 @@ router.post('/', async (req, res) => {
     res.status(201).json(addedNote)
 })
 router.get("/", async (request, response) =>{
-    const notes = await Note.find({})
+    const notes = await Note.find({}).populate('user', {username:1, name:1})
     response.json(notes)
 })
 router.get('/:id', async (req, res) => {
