@@ -1,13 +1,30 @@
 const Note = require("../models/note")
 const User = require('../models/user')
 const router = require("express").Router()
+const jwt = require('jsonwebtoken')
+
+
+const getTakenFrom = (req) => {
+    const auth = req.get('authentication')
+    if (auth && auth.startsWith('Bearer'))
+    {
+        return auth.replace('Bearer', '')
+    }
+    return null}
 
 router.post('/', async (req, res) => {
     if (!req.body || !req.body.content)
     {
         return res.status(400).json({Error: "New not cannot be empty"})
     }
-    const user = await User.findById(req.body.userId)
+    const token = getTakenFrom(req)
+    const decodedToken = await jwt.decode(token, process.env.SECRET)
+    if (!decodedToken.id)
+    {
+        return res.status(401).json({error: 'token was invalid'})
+    }
+    const user = await User.findById(decodedToken.id)
+
     const newNote = new Note({
         content: req.body.content,
         important: req.body.important || false,

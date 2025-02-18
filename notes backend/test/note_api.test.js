@@ -48,7 +48,7 @@ test.only('a valid note can be added', async () => {
     const newNote = {
         content: "Such a new note",
         important: false,
-        userId: users[0].id  // Usar el ID dinámicamente
+        userId: users[0].id
     }
     await api.post('/api/notes')
         .send(newNote)

@@ -13,6 +13,10 @@ const errorHandler = (error, req, res, next) =>{
     {
         handledError = 'expected `username` to be unique'
     }
+    if(error.name === 'JsonWebTokenError')
+    {
+        handledError = 'invalid token'
+    }
     if (handledError)
     {
         return res.status(400).json({Error: handledError});
