@@ -27,10 +27,10 @@ Content-Type: application/json
 #### POST NOTE
 POST {{url}}/notes
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImtldmFwYWVyZW8yIiwiaWQiOiI2N2I2MTgxNzIyMzZlNDkzMGQxZDIzZmIiLCJpYXQiOjE3Mzk5ODczMDJ9.5ZMHkzk5DoOFO8Uztmg7vdUfq_TYg4ry-NsmINU37Aw
 
 {
-  "content": "Reeeaaaaly?!",
-  "userId": "67b0ed9c40cc2177edae810a"
+  "content": "Testing the login again, huh?!"
 }
 
 ### CREATE USER
@@ -48,8 +48,17 @@ POST {{url}}/users
 Content-Type: application/json
 
 {
-  "username": "kevapaereo",
-  "name": "Álvaro Moreno",
+  "username": "kevapaereo2",
+  "name": "Álvaro Moreno 2",
+  "password": "catworld"
+}
+
+### TRY LOGIN 2
+POST {{url}}/login
+Content-Type: application/json
+
+{
+  "username": "kevapaereo2",
   "password": "catworld"
 }
 

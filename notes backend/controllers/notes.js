@@ -5,10 +5,11 @@ const jwt = require('jsonwebtoken')
 
 
 const getTakenFrom = (req) => {
-    const auth = req.get('authentication')
-    if (auth && auth.startsWith('Bearer'))
+    const auth = req.get('authorization')
+    if (auth && auth.startsWith('Bearer '))
     {
-        return auth.replace('Bearer', '')
+        console.log('found authentication')
+        return auth.replace('Bearer ', '')
     }
     return null}
 
@@ -18,6 +19,7 @@ router.post('/', async (req, res) => {
         return res.status(400).json({Error: "New not cannot be empty"})
     }
     const token = getTakenFrom(req)
+    console.log('token is ', token!=null)
     const decodedToken = await jwt.decode(token, process.env.SECRET)
     if (!decodedToken.id)
     {
