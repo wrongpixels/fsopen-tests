@@ -1,25 +1,33 @@
 const logger = require("../utils/logger")
 const errorHandler = (error, req, res, next) =>{
-    let handledError = null;
+    let handledError = null
+    let errorCode = 400
+    logger.error(error.message)
     if (error.name === "CastError")
     {
         handledError = "Note ID is in the wrong format.";
     }
-    if (error.name === "ValidationError")
+    else if (error.name === "ValidationError")
     {
         handledError = error.message;
     }
-    if (error.name === "MongoServerError" && error.message.includes("duplicate key error"))
+    else if (error.name === "MongoServerError" && error.message.includes("duplicate key error"))
     {
         handledError = 'expected `username` to be unique'
     }
-    if(error.name === 'JsonWebTokenError')
+    else if(error.name === 'JsonWebTokenError')
     {
         handledError = 'invalid token'
+        errorCode = 401
+    }
+    else if(error.name === 'TokenExpiredError')
+    {
+        handledError = 'Token expired'
+        errorCode = 401
     }
     if (handledError)
     {
-        return res.status(400).json({Error: handledError});
+        return res.status(errorCode).json({Error: handledError});
     }
     next (error);
 }
