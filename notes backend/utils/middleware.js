@@ -13,7 +13,7 @@ const errorHandler = (error, req, res, next) =>{
     }
     else if (error.name === "MongoServerError" && error.message.includes("duplicate key error"))
     {
-        handledError = 'expected `username` to be unique'
+         handledError = 'expected `username` to be unique'
     }
     else if(error.name === 'JsonWebTokenError')
     {
