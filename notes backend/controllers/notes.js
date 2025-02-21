@@ -20,7 +20,7 @@ router.post('/', async (req, res) => {
     }
     const token = getTakenFrom(req)
     console.log('token is ', token!=null)
-    const decodedToken = await jwt.decode(token, process.env.SECRET)
+    const decodedToken = jwt.verify(token, process.env.SECRET)
     if (!decodedToken.id)
     {
         return res.status(401).json({error: 'token was invalid'})
