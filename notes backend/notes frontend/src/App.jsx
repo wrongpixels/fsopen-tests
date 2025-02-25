@@ -1,16 +1,20 @@
-import {useState, useEffect} from 'react';
+import {useState, useEffect} from 'react'
 import Note from './components/Note';
 import noteService from './services/notes.js'
+import loginServices from './services/login.js'
 import './index.css'
-import Notification from "./components/notification.jsx";
+import Notification from "./components/notification.jsx"
 
-const doUpdateNote = (updatedNote, allNotes) => allNotes.map(note => note.id === updatedNote.id?updatedNote:note);
+const doUpdateNote = (updatedNote, allNotes) => allNotes.map(note => note.id === updatedNote.id?updatedNote:note)
 
 const App = () => {
-const [notes, setNotes] = useState(null);
-const [newNote, setNewNote] = useState('new note!');
-const [showAll, setShowAll] = useState(true);
-const [errorMessage, setErrorMessage] = useState('');
+    const [user, setUser] = useState(null)
+    const [notes, setNotes] = useState(null)
+    const [newNote, setNewNote] = useState('new note!')
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+    const [showAll, setShowAll] = useState(true);
+    const [errorMessage, setErrorMessage] = useState('')
 
     useEffect(() => {
         noteService.getAll().then(response => setNotes(response));
@@ -33,8 +37,28 @@ const addNote = (event) => {
     })
 }
 
+const sendErrorMessage = (message) => {
+    setErrorMessage(message)
+    setTimeout(wipeErrorMessage, 5000);
+}
+
 const handleEditNote = (event) => {
     setNewNote(event.target.value);
+}
+
+const handleLogin = async (event) => {
+    event.preventDefault()
+    console.log(username, password, 'to login')
+    try{
+        const user = await loginServices.loginUser({username, password})
+    sendErrorMessage(`Welcome back, ${user.name}!`)
+    setPassword('')
+    setUsername('')
+    setUser(user)}
+    catch(error) {
+        sendErrorMessage('Wrong user or password')
+    }
+
 }
 
 const wipeErrorMessage = () => setErrorMessage('');
@@ -60,25 +84,76 @@ const toggleImportanceOf = (id) => {
         color: 'darkblue',
         fontStyle: 'italic',
         fontSize: 35
-    };
+    }
+
+    const loginForm = () => {
+        if (user) {
+            return (<div>
+            </div>)
+        }
+        return (
+            <div>
+                <h1>Login</h1>
+                <form onSubmit={handleLogin}>
+                    <div>
+                        username
+                        <input
+                            name="Username"
+                            value={username}
+                            type="text"
+                            onChange={({target}) => setUsername(target.value)}
+                        />
+                    </div>
+                    <div>
+                        password
+                        <input
+                            name="Password"
+                            value={password}
+                            type="password"
+                            onChange={({target}) => setPassword(target.value)}/>
+                    </div>
+                    <br/>
+                    <div>
+                        <button type='submit'>Sign in</button>
+                        <br/>
+                    </div>
+                </form>
+                <br/><br/>
+            </div>
+        )
+    }
+
+    const newNoteForm = () => {
+        if (!user)
+        {
+            return (<></>)
+        }
+        return (
+            <>
+            <form onSubmit={addNote}>
+            <input value={newNote} onChange={handleEditNote}/>
+            <button type="submit">Add</button>
+        </form>
+        <button className={'errorButton'} onClick={() => toggleImportanceOf(99999)}>Cause an error!</button>
+            </>)
+    }
+
+
     return (
         <div>
             <h1 style={mainHeaderStyle}>Notes</h1>
-            <Notification message={errorMessage} />
+            <Notification message={errorMessage}/>
+            {loginForm()}
             <div>
-                <button onClick={()=>setShowAll(!showAll)}>{showAll?'Only Show Important':'Show All'}</button>
+                <button onClick={() => setShowAll(!showAll)}>{showAll ? 'Only Show Important' : 'Show All'}</button>
             </div>
             <ul>
                 {notesToShow?.map(note =>
-                    <Note key={note.id} note={note} toggleImportanceOf={()=>toggleImportanceOf(note.id)}/>
+                    <Note key={note.id} note={note} toggleImportanceOf={() => toggleImportanceOf(note.id)}/>
                 )}
             </ul>
-            <form onSubmit={addNote}>
-            <input value={newNote} onChange={handleEditNote}/>
-                <button type="submit">Add</button>
-            </form>
-            <button className={'errorButton'} onClick={() => toggleImportanceOf(99999)}>Cause an error!</button>
-            <Footer />
+            {newNoteForm()}
+            <Footer/>
         </div>
     )
 }
