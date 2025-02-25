@@ -54,7 +54,9 @@ const handleLogin = async (event) => {
     sendErrorMessage(`Welcome back, ${user.name}!`)
     setPassword('')
     setUsername('')
-    setUser(user)}
+    setUser(user)
+        noteService.setToken(user.token)}
+
     catch(error) {
         sendErrorMessage('Wrong user or password')
     }
@@ -85,6 +87,8 @@ const toggleImportanceOf = (id) => {
         fontStyle: 'italic',
         fontSize: 35
     }
+
+    const showUserName = () => <h2><p>Welcome back, {user.name}!</p></h2>
 
     const loginForm = () => {
         if (user) {
@@ -143,7 +147,7 @@ const toggleImportanceOf = (id) => {
         <div>
             <h1 style={mainHeaderStyle}>Notes</h1>
             <Notification message={errorMessage}/>
-            {loginForm()}
+            {user? showUserName():loginForm()}
             <div>
                 <button onClick={() => setShowAll(!showAll)}>{showAll ? 'Only Show Important' : 'Show All'}</button>
             </div>
@@ -152,7 +156,7 @@ const toggleImportanceOf = (id) => {
                     <Note key={note.id} note={note} toggleImportanceOf={() => toggleImportanceOf(note.id)}/>
                 )}
             </ul>
-            {newNoteForm()}
+            {user && newNoteForm()}
             <Footer/>
         </div>
     )
