@@ -2,6 +2,7 @@ import {useState, useEffect} from 'react'
 import Note from './components/Note';
 import noteService from './services/notes.js'
 import loginServices from './services/login.js'
+import {save, addToExisting, load, remove} from './services/storageService.js'
 import './index.css'
 import Notification from "./components/notification.jsx"
 
@@ -15,9 +16,18 @@ const App = () => {
     const [password, setPassword] = useState('')
     const [showAll, setShowAll] = useState(true);
     const [errorMessage, setErrorMessage] = useState('')
-
     useEffect(() => {
-        noteService.getAll().then(response => setNotes(response));
+        noteService.getAll().then(response => setNotes(response))
+        const loadedUser = load('loggedUser')
+        if (loadedUser)
+        {
+            if (loadedUser.token)
+            {
+                setUser(loadedUser)
+                noteService.setToken(loadedUser.token)
+            }
+        }
+
     }, []);
 const addNote = (event) => {
     event.preventDefault();
@@ -55,6 +65,7 @@ const handleLogin = async (event) => {
     setPassword('')
     setUsername('')
     setUser(user)
+        save('loggedUser', user)
         noteService.setToken(user.token)}
 
     catch(error) {
@@ -142,12 +153,25 @@ const toggleImportanceOf = (id) => {
             </>)
     }
 
+    const logOut = () => {
+        remove('loggedUser')
+        setUser(null)
+    }
+
+    const logOutButton = () => (
+        <>
+            <button onClick={logOut}>Log out</button>
+            <br/><br/>
+        </>
+    )
+
 
     return (
         <div>
             <h1 style={mainHeaderStyle}>Notes</h1>
             <Notification message={errorMessage}/>
             {user? showUserName():loginForm()}
+            {user && logOutButton()}
             <div>
                 <button onClick={() => setShowAll(!showAll)}>{showAll ? 'Only Show Important' : 'Show All'}</button>
             </div>
