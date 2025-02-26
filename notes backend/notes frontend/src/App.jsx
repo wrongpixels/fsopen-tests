@@ -6,7 +6,7 @@ import {save, addToExisting, load, remove} from './services/storageService.js'
 import './index.css'
 import Notification from "./components/notification.jsx"
 
-const doUpdateNote = (updatedNote, allNotes) => allNotes.map(note => note.id === updatedNote.id?updatedNote:note)
+const doUpdateNote = (updatedNote, allNotes) => allNotes.map(note => note.id === updatedNote.id ? updatedNote : note)
 
 const App = () => {
     const [user, setUser] = useState(null)
@@ -19,80 +19,75 @@ const App = () => {
     useEffect(() => {
         noteService.getAll().then(response => setNotes(response))
         const loadedUser = load('loggedUser')
-        if (loadedUser)
-        {
-            if (loadedUser.token)
-            {
+        if (loadedUser) {
+            if (loadedUser.token) {
                 setUser(loadedUser)
                 noteService.setToken(loadedUser.token)
             }
         }
 
     }, []);
-const addNote = (event) => {
-    event.preventDefault();
-    if (newNote === '')
-    {
-        return;
-    }
-    console.log(newNote);
-    const thisNote = {
-        content: newNote,
-        important: Math.random() < 0.5
-    };
-    noteService.create(thisNote).then(
-        result => {
-            setNotes(notes.concat(result));
-            setNewNote('');
-    })
-}
-
-const sendErrorMessage = (message) => {
-    setErrorMessage(message)
-    setTimeout(wipeErrorMessage, 5000);
-}
-
-const handleEditNote = (event) => {
-    setNewNote(event.target.value);
-}
-
-const handleLogin = async (event) => {
-    event.preventDefault()
-    console.log(username, password, 'to login')
-    try{
-        const user = await loginServices.loginUser({username, password})
-    sendErrorMessage(`Welcome back, ${user.name}!`)
-    setPassword('')
-    setUsername('')
-    setUser(user)
-        save('loggedUser', user)
-        noteService.setToken(user.token)}
-
-    catch(error) {
-        sendErrorMessage('Wrong user or password')
+    const addNote = (event) => {
+        event.preventDefault();
+        if (newNote === '') {
+            return;
+        }
+        console.log(newNote);
+        const thisNote = {
+            content: newNote,
+            important: Math.random() < 0.5
+        };
+        noteService.create(thisNote).then(
+            result => {
+                setNotes(notes.concat(result));
+                setNewNote('');
+            })
     }
 
-}
-
-const wipeErrorMessage = () => setErrorMessage('');
-
-const toggleImportanceOf = (id) => {
-    console.log('importance of ' + id + ' needs to be toggled');
-    let note = notes.find(_note => _note.id === id);
-    if (id === 99999)
-    {
-        note = {content: 'jaja', id: '9999999', important: false}
-    }
-    const newNote = {...note, important: !note.important};
-
-    noteService.updateNote(newNote).then(result=> setNotes(doUpdateNote(result, notes))).catch(error => {
-        console.log('There was an error. Note does not exist anymore');
-        setErrorMessage(`Error: Note ${newNote.content} was already removed`);
+    const sendErrorMessage = (message) => {
+        setErrorMessage(message)
         setTimeout(wipeErrorMessage, 5000);
-        setNotes(notes.filter(n => n.id !== id));
-    });
-}
-    const notesToShow = showAll?notes:notes.filter(note => !note.important);
+    }
+
+    const handleEditNote = (event) => {
+        setNewNote(event.target.value);
+    }
+
+    const handleLogin = async (event) => {
+        event.preventDefault()
+        console.log(username, password, 'to login')
+        try {
+            const user = await loginServices.loginUser({username, password})
+            sendErrorMessage(`Welcome back, ${user.name}!`)
+            setPassword('')
+            setUsername('')
+            setUser(user)
+            save('loggedUser', user)
+            noteService.setToken(user.token)
+        } catch (error) {
+            sendErrorMessage('Wrong user or password')
+        }
+
+    }
+
+    const wipeErrorMessage = () => setErrorMessage('');
+
+    const toggleImportanceOf = (id) => {
+        console.log('importance of ' + id + ' needs to be toggled');
+        let note = notes.find(_note => _note.id === id);
+        if (id === 99999) {
+            note = {content: 'jaja', id: '9999999', important: false}
+        }
+        const newNote = {...note, important: !note.important};
+
+        noteService.updateNote(newNote).then(result => setNotes(doUpdateNote(result, notes))).catch(error => {
+            console.log('There was an error. Note does not exist anymore');
+            setErrorMessage(`Error: Note ${newNote.content} was already removed`);
+            setTimeout(wipeErrorMessage, 5000);
+            setNotes(notes.filter(n => n.id !== id));
+        });
+    }
+    const notesToShow = showAll ? notes : notes.filter(note => !note.important);
     const mainHeaderStyle = {
         color: 'darkblue',
         fontStyle: 'italic',
@@ -139,17 +134,16 @@ const toggleImportanceOf = (id) => {
     }
 
     const newNoteForm = () => {
-        if (!user)
-        {
+        if (!user) {
             return (<></>)
         }
         return (
             <>
-            <form onSubmit={addNote}>
-            <input value={newNote} onChange={handleEditNote}/>
-            <button type="submit">Add</button>
-        </form>
-        <button className={'errorButton'} onClick={() => toggleImportanceOf(99999)}>Cause an error!</button>
+                <form onSubmit={addNote}>
+                    <input value={newNote} onChange={handleEditNote}/>
+                    <button type="submit">Add</button>
+                </form>
+                <button className={'errorButton'} onClick={() => toggleImportanceOf(99999)}>Cause an error!</button>
             </>)
     }
 
@@ -170,7 +164,7 @@ const toggleImportanceOf = (id) => {
         <div>
             <h1 style={mainHeaderStyle}>Notes</h1>
             <Notification message={errorMessage}/>
-            {user? showUserName():loginForm()}
+            {user ? showUserName() : loginForm()}
             {user && logOutButton()}
             <div>
                 <button onClick={() => setShowAll(!showAll)}>{showAll ? 'Only Show Important' : 'Show All'}</button>
@@ -192,7 +186,7 @@ const Footer = () => {
         fontSize: 16,
         fontStyle: 'italic'
     }
-    return(
+    return (
         <div style={footerStyle}>
             <br/>
             <em>Note app, Department of WTF of Helsinki</em>

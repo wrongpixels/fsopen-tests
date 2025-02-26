@@ -4,8 +4,8 @@ const baseURL = '/api/notes/';
 let token;
 
 const setToken = newToken => {
-        token =  `Bearer ${newToken}`
-        tokenObject = {headers: {Authorization: token}}
+    token = `Bearer ${newToken}`
+    tokenObject = {headers: {Authorization: token}}
 }
 const missingNote = () => console.log('Note was not found!');
 
@@ -16,8 +16,8 @@ const getAll = () => axios.get(baseURL)
 
 const create = async (newNote) => {
 
-        const res = await axios.post(baseURL, newNote, tokenObject)
-        return res.data
+    const res = await axios.post(baseURL, newNote, tokenObject)
+    return res.data
 }
 
 const updateNote = (updatedNote) => axios.put(baseURL + updatedNote.id, updatedNote, tokenObject)
