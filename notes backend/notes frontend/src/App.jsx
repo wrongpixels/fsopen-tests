@@ -4,7 +4,10 @@ import noteService from './services/notes.js'
 import loginServices from './services/login.js'
 import {save, addToExisting, load, remove} from './services/storageService.js'
 import './index.css'
-import Notification from "./components/notification.jsx"
+import Notification from "./components/Notification.jsx"
+import LoginForm from './components/LoginForm.jsx'
+import Toggleable from './components/Toggleable.jsx'
+
 
 const doUpdateNote = (updatedNote, allNotes) => allNotes.map(note => note.id === updatedNote.id ? updatedNote : note)
 
@@ -16,6 +19,7 @@ const App = () => {
     const [password, setPassword] = useState('')
     const [showAll, setShowAll] = useState(true);
     const [errorMessage, setErrorMessage] = useState('')
+    const [loginVisible, setLoginVisible] = useState(false)
     useEffect(() => {
         noteService.getAll().then(response => setNotes(response))
         const loadedUser = load('loggedUser')
@@ -101,35 +105,20 @@ const App = () => {
             return (<div>
             </div>)
         }
-        return (
-            <div>
-                <h1>Login</h1>
-                <form onSubmit={handleLogin}>
-                    <div>
-                        username
-                        <input
-                            name="Username"
-                            value={username}
-                            type="text"
-                            onChange={({target}) => setUsername(target.value)}
-                        />
-                    </div>
-                    <div>
-                        password
-                        <input
-                            name="Password"
-                            value={password}
-                            type="password"
-                            onChange={({target}) => setPassword(target.value)}/>
-                    </div>
-                    <br/>
-                    <div>
-                        <button type='submit'>Sign in</button>
-                        <br/>
-                    </div>
-                </form>
-                <br/><br/>
-            </div>
+       return(
+           <>
+           <Toggleable  labelVisible='Close Login'
+                        labelInvisible ='Show Login'
+                        visibilityOnStart={false}
+           >
+           <LoginForm loginVisible={loginVisible}
+                      setLoginVisible={setLoginVisible}
+                      handleLogin={handleLogin} username={username}
+                      setUsername={setUsername} password={password}
+                      setPassword={setPassword}
+           />
+               </Toggleable>
+           </>
         )
     }
 
