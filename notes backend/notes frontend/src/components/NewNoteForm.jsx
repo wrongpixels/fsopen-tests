@@ -3,7 +3,7 @@ import noteService from '../services/notes.js'
 
 
 
-const NewNoteForm = ({setNotes, notes}) => {
+const NewNoteForm = ({setNotes, notes, toggleVisibility}) => {
     const [newNote, setNewNote] = useState('')
 
     const addNote = (event) => {
@@ -20,6 +20,7 @@ const NewNoteForm = ({setNotes, notes}) => {
             result => {
                 setNotes(notes.concat(result));
                 setNewNote('');
+                toggleVisibility()
             })
     }
 

@@ -1,7 +1,6 @@
-import {useState, useEffect} from 'react'
+import {useState, useEffect, useRef} from 'react'
 import Note from './components/Note';
 import noteService from './services/notes.js'
-import loginServices from './services/login.js'
 import {save, addToExisting, load, remove} from './services/storageService.js'
 import './index.css'
 import Notification from "./components/Notification.jsx"
@@ -18,6 +17,9 @@ const App = () => {
     const [showAll, setShowAll] = useState(true);
     const [errorMessage, setErrorMessage] = useState('')
     const [loginVisible, setLoginVisible] = useState(false)
+    const loginRef = useRef()
+    const noteRef = useRef()
+
     useEffect(() => {
         noteService.getAll().then(response => setNotes(response))
         const loadedUser = load('loggedUser')
@@ -78,6 +80,7 @@ const App = () => {
                <Toggleable labelVisible='Close Login'
                            labelInvisible='Show Login'
                            visibilityOnStart={false}
+                           ref={loginRef}
                >
                    <LoginForm loginVisible={loginVisible}
                               setLoginVisible={setLoginVisible}
@@ -97,10 +100,18 @@ const App = () => {
         }
         return (
             <>
-                <NewNoteForm
-                    notes={notes}
-                    setNotes={setNotes}
-                />
+                <Toggleable
+                    visibilityOnStart={true}
+                    ref={noteRef}
+                >
+                    <NewNoteForm
+                        notes={notes}
+                        setNotes={setNotes}
+                        labelVisible="Hide notes"
+                        labelInvisible="Show notes"
+                        toggleVisibility={() => noteRef.current.toggleVisibility()}
+                    />
+                </Toggleable>
             </>)
     }
 
