@@ -1,6 +1,27 @@
+import {useState} from 'react'
+import loginServices from '../services/login.js'
+import noteService from '../services/notes.js'
 
-const LoginForm = ({loginVisible, setLoginVisible, handleLogin, setUsername, setPassword, username, password }) => {
 
+const LoginForm = ({setUser, save, loginVisible, setLoginVisible, sendErrorMessage}) => {
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+
+    const handleLogin = async (event) => {
+        event.preventDefault()
+        console.log(username, password, 'to login')
+        try {
+            const user = await loginServices.loginUser({username, password})
+            sendErrorMessage(`Welcome back, ${user.name}!`)
+            setPassword('')
+            setUsername('')
+            setUser(user)
+            save('loggedUser', user)
+            noteService.setToken(user.token)
+        } catch (error) {
+            sendErrorMessage('Wrong user or password')
+        }
+    }
 
     const handleVisibility = (evt) => {
         evt.preventDefault()
@@ -35,9 +56,7 @@ const LoginForm = ({loginVisible, setLoginVisible, handleLogin, setUsername, set
                     <br/>
                 </div>
             </form>
-            <br/>
             </div>
-            <br/>
         </div>
     )
 }

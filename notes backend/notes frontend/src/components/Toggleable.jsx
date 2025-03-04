@@ -8,14 +8,14 @@ const Toggleable = (props) => {
     const handleClick = (evt) => setVisibility(!visibility)
 
     const visibilityStyle = {display:visibility?'':'none'}
-    const button = () => <><button
+    const button = () => <button
         onClick={handleClick} > {visibility?labelVisible:labelInvisible}
-    </button> </>
+    </button>
     return (
         <>
-        <div style={visibilityStyle}>
+        <span style={visibilityStyle}>
             {children}
-        </div>
+        </span>
     {button()}
    </>
 )

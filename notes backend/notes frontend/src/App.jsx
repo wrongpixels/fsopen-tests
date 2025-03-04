@@ -7,6 +7,7 @@ import './index.css'
 import Notification from "./components/Notification.jsx"
 import LoginForm from './components/LoginForm.jsx'
 import Toggleable from './components/Toggleable.jsx'
+import NewNoteForm from './components/NewNoteForm.jsx'
 
 
 const doUpdateNote = (updatedNote, allNotes) => allNotes.map(note => note.id === updatedNote.id ? updatedNote : note)
@@ -14,9 +15,6 @@ const doUpdateNote = (updatedNote, allNotes) => allNotes.map(note => note.id ===
 const App = () => {
     const [user, setUser] = useState(null)
     const [notes, setNotes] = useState(null)
-    const [newNote, setNewNote] = useState('new note!')
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
     const [showAll, setShowAll] = useState(true);
     const [errorMessage, setErrorMessage] = useState('')
     const [loginVisible, setLoginVisible] = useState(false)
@@ -31,22 +29,7 @@ const App = () => {
         }
 
     }, []);
-    const addNote = (event) => {
-        event.preventDefault();
-        if (newNote === '') {
-            return;
-        }
-        console.log(newNote);
-        const thisNote = {
-            content: newNote,
-            important: Math.random() < 0.5
-        };
-        noteService.create(thisNote).then(
-            result => {
-                setNotes(notes.concat(result));
-                setNewNote('');
-            })
-    }
+
 
     const sendErrorMessage = (message) => {
         setErrorMessage(message)
@@ -54,25 +37,10 @@ const App = () => {
     }
 
     const handleEditNote = (event) => {
-        setNewNote(event.target.value);
+       // setNewNote(event.target.value);
     }
 
-    const handleLogin = async (event) => {
-        event.preventDefault()
-        console.log(username, password, 'to login')
-        try {
-            const user = await loginServices.loginUser({username, password})
-            sendErrorMessage(`Welcome back, ${user.name}!`)
-            setPassword('')
-            setUsername('')
-            setUser(user)
-            save('loggedUser', user)
-            noteService.setToken(user.token)
-        } catch (error) {
-            sendErrorMessage('Wrong user or password')
-        }
 
-    }
 
     const wipeErrorMessage = () => setErrorMessage('');
 
@@ -106,20 +74,21 @@ const App = () => {
             </div>)
         }
        return(
-           <>
-           <Toggleable  labelVisible='Close Login'
-                        labelInvisible ='Show Login'
-                        visibilityOnStart={false}
-           >
-           <LoginForm loginVisible={loginVisible}
-                      setLoginVisible={setLoginVisible}
-                      handleLogin={handleLogin} username={username}
-                      setUsername={setUsername} password={password}
-                      setPassword={setPassword}
-           />
+           <div>
+               <Toggleable labelVisible='Close Login'
+                           labelInvisible='Show Login'
+                           visibilityOnStart={false}
+               >
+                   <LoginForm loginVisible={loginVisible}
+                              setLoginVisible={setLoginVisible}
+                              save={save}
+                              setUser={setUser}
+                              sendErrorMessage={sendErrorMessage}
+                   />
                </Toggleable>
-           </>
-        )
+               <br/><br/>
+           </div>
+       )
     }
 
     const newNoteForm = () => {
@@ -128,11 +97,10 @@ const App = () => {
         }
         return (
             <>
-                <form onSubmit={addNote}>
-                    <input value={newNote} onChange={handleEditNote}/>
-                    <button type="submit">Add</button>
-                </form>
-                <button className={'errorButton'} onClick={() => toggleImportanceOf(99999)}>Cause an error!</button>
+                <NewNoteForm
+                    notes={notes}
+                    setNotes={setNotes}
+                />
             </>)
     }
 
