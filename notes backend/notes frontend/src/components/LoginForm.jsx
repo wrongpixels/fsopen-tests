@@ -1,4 +1,5 @@
 import {useState} from 'react'
+import PropTypes from 'prop-types'
 import loginServices from '../services/login.js'
 import noteService from '../services/notes.js'
 
@@ -6,6 +7,14 @@ import noteService from '../services/notes.js'
 const LoginForm = ({setUser, save, loginVisible, setLoginVisible, sendErrorMessage}) => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+    LoginForm.propTypes = {
+        setUser: PropTypes.func.isRequired,
+        setLoginVisible: PropTypes.func.isRequired,
+        sendErrorMessage: PropTypes.func.isRequired,
+        save: PropTypes.func.isRequired,
+        loginVisible: PropTypes.bool.isRequired
+
+    }
 
     const handleLogin = async (event) => {
         event.preventDefault()

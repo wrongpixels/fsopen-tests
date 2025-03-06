@@ -1,8 +1,14 @@
 import {useState, forwardRef, useImperativeHandle} from 'react'
+import PropTypes from 'prop-types'
 
 const Toggleable = forwardRef((props, refs) => {
 
     const {labelVisible, labelInvisible, visibilityOnStart, children} = props
+    Toggleable.propTypes = {
+        labelVisible: PropTypes.string.isRequired,
+        labelInvisible: PropTypes.string.isRequired
+    }
+    Toggleable.displayName = 'Toggleable'
     const [visibility, setVisibility] = useState(visibilityOnStart)
 
     const handleClick = (evt) => toggleVisibility()
