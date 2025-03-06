@@ -1,26 +1,33 @@
 import axios from 'axios'
 
-const baseURL = '/api/notes/';
-let token;
-
-const setToken = newToken => {
-    token = `Bearer ${newToken}`
-    tokenObject = {headers: {Authorization: token}}
-}
-const missingNote = () => console.log('Note was not found!');
-
+const baseURL = '/api/notes/'
+let token
 let tokenObject
 
-const getAll = () => axios.get(baseURL)
-    .then(response => response.data).catch(missingNote);
-
-const create = async (newNote) => {
-
-    const res = await axios.post(baseURL, newNote, tokenObject)
-    return res.data
+const setToken = newToken => {
+  token = `Bearer ${newToken}`
+  tokenObject = { headers: { Authorization: token } }
 }
 
-const updateNote = (updatedNote) => axios.put(baseURL + updatedNote.id, updatedNote, tokenObject)
-    .then(response => response.data);
+const missingNote = () => console.log('Note was not found!')
 
-export default {getAll, create, updateNote, setToken}
+const getAll = async () => {
+  try {
+    const response = await axios.get(baseURL)
+    return response.data
+  } catch (error) {
+    missingNote()
+  }
+}
+
+const create = async (newNote) => {
+  const response = await axios.post(baseURL, newNote, tokenObject)
+  return response.data
+}
+
+const updateNote = async (updatedNote, id) => {
+  const response = await axios.put(baseURL + id, updatedNote, tokenObject)
+  return response.data
+}
+
+export default { getAll, create, updateNote, setToken }

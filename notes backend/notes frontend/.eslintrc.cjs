@@ -9,6 +9,8 @@ module.exports = {
         'plugin:react/recommended',
         'plugin:react/jsx-runtime',
         'plugin:react-hooks/recommended',
+        'plugin:vitest-globals/recommended',
+
     ],
     ignorePatterns: ['dist', '.eslintrc.cjs'],
     parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
@@ -19,10 +21,8 @@ module.exports = {
             "error",
             2
         ],
-        "linebreak-style": [
-            "error",
-            "unix"
-        ],
+        "react-hooks/exhaustive-deps": "warn",
+        "linebreak-style": ["warn", "unix"],
         "quotes": [
             "error",
             "single"

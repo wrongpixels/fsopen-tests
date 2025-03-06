@@ -1,12 +1,10 @@
-const Note = (props) => {
-    const toggleImportanceOf = (note) => {
-        props.toggleImportanceOf();
-    }
-    return(
-        <li className='note'>
-            {props.note.content}
-            <button style={{marginLeft: 10}} onClick={()=>toggleImportanceOf(props.note)}>Set {props.note.important?'':'not'} important</button>
-        </li>
-    )
+const Note = ({ toggleImportanceOf, note }) => {
+  return(
+    <li className='note'>
+      {note.content}
+      <button style={{ marginLeft: 10 }}
+        onClick={() => toggleImportanceOf(note.id)}>Set {note.important?'':'not '}important</button>
+    </li>
+  )
 }
 export default Note
