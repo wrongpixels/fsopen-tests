@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import noteService from '../services/notes.js'
 
 
 
