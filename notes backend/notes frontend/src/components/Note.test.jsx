@@ -7,9 +7,9 @@ const note = {
   important: true
 }
 
-test('renders content', () => {
+test('renders content', async () => {
   render(<Note note={note} />)
-  const element = screen.getByText(note.content)
+  const element = await screen.findByText(note.content, {exact: false})
   screen.debug(element)
 
 })

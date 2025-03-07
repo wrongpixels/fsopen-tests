@@ -27,5 +27,18 @@ describe ('<Toggleable />', () => {
 
     test('if we hit the button, they are displayed', async () => {
         const user = userEvent.setup()
+        const button = screen.getByText('show...')
+        await user.click(button)
+        const div = activeContainer.querySelector('.toggleableContent')
+        expect(div).not.toHaveStyle('display: none')
+    })
+    test('if we hit and re-hit, we go back to invisible', async () => {
+        const user = userEvent.setup()
+        const button = screen.getByText('show...')
+        await user.click(button)
+        await user.click(button)
+        const div = activeContainer.querySelector('.toggleableContent')
+        expect(div).toHaveStyle('display: none')
+
     })
 })

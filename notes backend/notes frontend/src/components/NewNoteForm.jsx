@@ -3,10 +3,10 @@ import noteService from '../services/notes.js'
 
 
 
-const NewNoteForm = ({ setNotes, notes, toggleVisibility }) => {
+const NewNoteForm = ({ createNote, toggleVisibility }) => {
   const [newNote, setNewNote] = useState('')
 
-  const addNote = (event) => {
+  const addNote = async (event) => {
     event.preventDefault()
     if (newNote === '') {
       return
@@ -16,22 +16,26 @@ const NewNoteForm = ({ setNotes, notes, toggleVisibility }) => {
       content: newNote,
       important: true
     }
-    noteService.create(thisNote).then(
-      result => {
-        setNotes(notes.concat(result))
-        setNewNote('')
-        toggleVisibility()
-      })
+    createNote(thisNote)
+      toggleVisibility()
   }
 
   return (
-    <>
+    <div className="formDiv">
       <form onSubmit={addNote}>
-                New Note:
-        <input value={newNote} onChange={({ target }) => setNewNote(target.value)}/>
+        New Note:
+        <input
+            value={newNote}
+            onChange={({target}) => setNewNote(target.value)}
+            id="note-input"
+        />
+        <input
+          placeholder="enter note"
+        />
+
         <button type="submit">Add</button>
       </form>
-    </>
+    </div>
   )
 }
 

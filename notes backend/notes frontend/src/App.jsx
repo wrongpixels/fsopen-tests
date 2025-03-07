@@ -47,6 +47,14 @@ const App = () => {
 
   const wipeErrorMessage = () => setErrorMessage('')
 
+  const createNote = async (newNote) => {
+    if (newNote.content === '') {
+      return
+    }
+    const result = await noteService.create(newNote)
+    setNotes(notes.concat(result))
+  }
+
   const toggleImportanceOf = async (id) => {
     const note = notes.find(_note => _note.id === id)
 
@@ -107,11 +115,11 @@ const App = () => {
           ref={noteRef}
           labelVisible="Hide notes"
           labelInvisible="Show notes"
-          toggleVisibility={() => noteRef.current.toggleVisibility()}
         >
           <NewNoteForm
-            notes={notes}
-            setNotes={setNotes}
+            createNote={createNote}
+            toggleVisibility={() => noteRef.current.toggleVisibility()}
+
 
           />
         </Toggleable>
