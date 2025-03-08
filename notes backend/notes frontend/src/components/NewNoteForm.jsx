@@ -16,7 +16,7 @@ const NewNoteForm = ({ createNote, toggleVisibility }) => {
       important: true
     }
     createNote(thisNote)
-      toggleVisibility()
+    toggleVisibility()
   }
 
   return (
@@ -24,9 +24,9 @@ const NewNoteForm = ({ createNote, toggleVisibility }) => {
       <form onSubmit={addNote}>
         New Note:
         <input
-            value={newNote}
-            onChange={({target}) => setNewNote(target.value)}
-            id="note-input"
+          value={newNote}
+          onChange={({ target }) => setNewNote(target.value)}
+          id="note-input"
         />
         <input
           placeholder="enter note"

@@ -9,13 +9,13 @@ const note = {
 
 test('renders content', async () => {
   render(<Note note={note} />)
-  const element = await screen.findByText(note.content, {exact: false})
+  const element = await screen.findByText(note.content, { exact: false })
   screen.debug(element)
 
 })
 
 test('renders with class', () => {
-  const {container} = render(<Note note={note} ></Note>)
+  const { container } = render(<Note note={note} ></Note>)
   const foundNote = container.querySelector('.note')
   expect(foundNote).toHaveTextContent(note.content)
 })
