@@ -43,20 +43,22 @@ const LoginForm = ({ setUser, save, loginVisible, setLoginVisible, sendErrorMess
         <h1>Login</h1>
         <form onSubmit={handleLogin}>
           <div>
-                    username
+                    Username
             <input
               name="Username"
+              data-testid="username"
               value={username}
               type="text"
               onChange={({ target }) => setUsername(target.value)}
             />
           </div>
           <div>
-                    password
+                    Password
             <input
               name="Password"
               value={password}
               type="password"
+              data-testid="password"
               onChange={({ target }) => setPassword(target.value)}/>
           </div>
           <br/>

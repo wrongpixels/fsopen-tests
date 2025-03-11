@@ -13,7 +13,7 @@ const doUpdateNote = (updatedNote, allNotes) => allNotes.map(note => note.id ===
 
 const App = () => {
   const [user, setUser] = useState(null)
-  const [notes, setNotes] = useState(null)
+  const [notes, setNotes] = useState([])
   const [showAll, setShowAll] = useState(true)
   const [errorMessage, setErrorMessage] = useState('')
   const [loginVisible, setLoginVisible] = useState(false)
@@ -22,9 +22,7 @@ const App = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const notes = await noteService.getAll()
-      setNotes(notes)
-
+      await getAllNotes()
       const loadedUser = load('loggedUser')
       if (loadedUser?.token) {
         setUser(loadedUser)
@@ -39,11 +37,14 @@ const App = () => {
     setTimeout(wipeErrorMessage, 5000)
   }
 
+  const getAllNotes = async () => {
+    const currentNotes = await noteService.getAll()
+    setNotes(currentNotes)
+  }
+
   const handleEditNote = (event) => {
     // setNewNote(event.target.value);
   }
-
-
 
   const wipeErrorMessage = () => setErrorMessage('')
 
@@ -52,7 +53,18 @@ const App = () => {
       return
     }
     const result = await noteService.create(newNote)
-    setNotes(notes.concat(result))
+    if (!notes)
+    {
+      setNotes([result])
+    }
+    else {
+      setNotes(notes.concat(result))
+    }
+  }
+
+  const removeNote = async (id) => {
+    await noteService.remove(id)
+    await getAllNotes()
   }
 
   const toggleImportanceOf = async (id) => {
@@ -78,7 +90,7 @@ const App = () => {
     fontSize: 35
   }
 
-  const showUserName = () => <h2><p>Welcome back, {user.name}!</p></h2>
+  const showUserName = () => <h2><p>Logged in as {user.name}!</p></h2>
 
   const loginForm = () => {
     if (user) {
@@ -152,6 +164,7 @@ const App = () => {
         {notesToShow?.map(note =>
           <Note key={note.id}
             note={note}
+                removeNote={removeNote}
             toggleImportanceOf={toggleImportanceOf}/>
         )}
       </ul>

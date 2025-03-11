@@ -43,6 +43,9 @@ Content-Type: application/json
     "password": "salainen"
 }
 
+### DELETE ALL
+POST {{url}}/testing/reset
+
 ### CREATE USER
 POST {{url}}/users
 Content-Type: application/json

@@ -23,6 +23,10 @@ app.use(express.static('dist'));
 app.use('/api/login', loginRouter)
 app.use('/api/notes', notesRouter)
 app.use('/api/users', usersRouter)
+if (process.env.NODE_ENV === 'test')
+{
+    app.use('/api/testing', require('./controllers/testing'))
+}
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler);
 

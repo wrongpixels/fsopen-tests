@@ -20,6 +20,11 @@ const getAll = async () => {
   }
 }
 
+const remove = async (id) => {
+  const response = await axios.delete(`${baseURL}/${id}`)
+  return response.data
+}
+
 const create = async (newNote) => {
   const response = await axios.post(baseURL, newNote, tokenObject)
   return response.data
@@ -30,4 +35,4 @@ const updateNote = async (updatedNote, id) => {
   return response.data
 }
 
-export default { getAll, create, updateNote, setToken }
+export default { getAll, create, updateNote, setToken, remove }
