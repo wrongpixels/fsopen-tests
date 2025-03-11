@@ -1,34 +1,13 @@
 const { test, describe, beforeEach, expect } = require('@playwright/test')
-const FrontURL = 'http://localhost:5173'
-const BackURL = 'http://localhost:3001'
-const resetURL = `${BackURL}/api/testing/reset`
-
-const userLogin = {
-    username: 'admin',
-    name: 'John Johnson',
-    password: 'supersafe'
-}
-
-const note = 'Sooo this is a new note'
+const {login, addNote, userLogin} = require('./helper')
+const FrontURL = ''
+const resetURL = `${FrontURL}api/testing/reset`
 
 beforeEach(async ({page, request}) => {
     await request.post(resetURL)
     await request.post(`${FrontURL}/api/users`, {data: userLogin})
     await page.goto(FrontURL)
 })
-
-const login = async (page) => {
-    await page.getByText('Show Login').click()
-    await page.getByTestId('username').fill(userLogin.username)
-    await page.getByTestId('password').fill(userLogin.password)
-    await page.getByRole('button', {name:'Sign in'}).click()
-    return await expect(page.getByText(`Welcome back, ${userLogin.name}!`)).toBeVisible()
-}
-const addNote = async (page) => {
-    await page.getByTestId('note-content').fill(note)
-    await page.getByRole('button', {name: 'Add'}).click()
-    return await page.getByText(note)
-}
 
 describe('Note app', () => {
     test('front page can be indeed opened', async ({page}) => {
@@ -37,8 +16,17 @@ describe('Note app', () => {
         await expect(page.getByText('Note app, Department of WTF of Helsinki')).toBeVisible()
         })
     test('user can login', async ({page}) => {
-        await login(page)
-        })
+        await login(page, userLogin)
+        await expect(page.getByText(`Welcome back, ${userLogin.name}!`)).toBeVisible()
+    })
+    test('yet login fails if password is wrong', async ({page}) => {
+        await login(page, {...userLogin, password: 'wat'})
+        const errorDiv = await page.locator('.error')
+        await expect(errorDiv).toContainText('Wrong user or password')
+        await expect(errorDiv).toHaveCSS('border-style', 'solid')
+        await expect(errorDiv).toHaveCSS('color', 'rgb(255, 0, 0)')
+        await expect(page.getByText(`Welcome back, ${userLogin.name}!`)).not.toBeVisible()
+    })
 
     describe('when logged in', () => {
         beforeEach(async ({page}) => await login(page))

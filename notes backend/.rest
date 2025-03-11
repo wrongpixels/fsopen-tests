@@ -1,4 +1,4 @@
-@url = http://localhost:3001/api
+@url = http://localhost:5173/api
 
 ### JUST GET ALL
 GET {{url}}/notes
