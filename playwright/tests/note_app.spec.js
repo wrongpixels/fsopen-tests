@@ -16,7 +16,7 @@ describe('Note app', () => {
         await expect(page.getByText('Note app, Department of WTF of Helsinki')).toBeVisible()
         })
     test('user can login', async ({page}) => {
-        await login(page, userLogin)
+        await login(page)
         await expect(page.getByText(`Welcome back, ${userLogin.name}!`)).toBeVisible()
     })
     test('yet login fails if password is wrong', async ({page}) => {

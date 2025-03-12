@@ -5,7 +5,11 @@ const userLogin = {
     password: 'supersafe'
 }
 const note = 'Sooo this is a new note'
-const login = async (page, loginData) => {
+const login = async (page, loginData = null) => {
+    if (!loginData)
+    {
+        loginData = userLogin
+    }
     await page.getByText('Show Login').click()
     await page.getByTestId('username').fill(loginData.username)
     await page.getByTestId('password').fill(loginData.password)
