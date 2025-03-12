@@ -1,5 +1,5 @@
 const { test, describe, beforeEach, expect } = require('@playwright/test')
-const {login, addNote, userLogin} = require('./helper')
+const {login, addNote, userLogin } = require('./helper')
 const FrontURL = ''
 const resetURL = `${FrontURL}api/testing/reset`
 
@@ -17,10 +17,10 @@ describe('Note app', () => {
         })
     test('user can login', async ({page}) => {
         await login(page)
-        await expect(page.getByText(`Welcome back, ${userLogin.name}!`)).toBeVisible()
+        await expect(await page.getByText(`Welcome back, ${userLogin.name}!`)).toBeVisible()
     })
     test('yet login fails if password is wrong', async ({page}) => {
-        await login(page, {...userLogin, password: 'wat'})
+        await login(page, {...userLogin, password: 'wat'}, false)
         const errorDiv = await page.locator('.error')
         await expect(errorDiv).toContainText('Wrong user or password')
         await expect(errorDiv).toHaveCSS('border-style', 'solid')
@@ -29,13 +29,14 @@ describe('Note app', () => {
     })
 
     describe('when logged in', () => {
-        beforeEach(async ({page}) => await login(page))
-
-        test('can create a new note', async ({page}) => {
-            await expect(await addNote(page)).toBeVisible()
+        beforeEach(async ({page}) => {
+            await login(page)
         })
 
-        test('can toggle importance of a note', async ({page}) => {
+        test('can create a new note', async ({page}) => {
+            await addNote(page)
+        })
+        test('and toggle importance of a note', async ({page}) => {
             await addNote(page)
             await page.getByRole('button', {name: 'Set important'}).click()
             const button = await page.getByRole('button', {name: 'Set not important'})
@@ -43,5 +44,23 @@ describe('Note app', () => {
             await button.click()
             await expect(page.getByRole('button', {name: 'Set important'})).toBeVisible()
         })
+
+        describe('and when multiple exist', () => {
+            beforeEach( async ({page}) => {
+                await addNote(page, 'first note')
+                await addNote(page, 'second note')
+                await addNote(page, 'third note')
+            })
+            test('can toggle importance of just one', async ({page}) => {
+                const noteParent = await page.getByText('second note').locator('..')
+                await noteParent.getByRole('button', {name: 'Set important'}).click()
+                const button = await noteParent.getByRole('button', {name: 'Set not important'})
+                await expect(button).toBeVisible()
+                await button.click()
+                await expect(noteParent.getByRole('button', {name: 'Set important'})).toBeVisible()
+            })
+        })
+
+
     })
 })

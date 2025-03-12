@@ -4,7 +4,7 @@ const Note = ({ toggleImportanceOf, note, removeNote }) => {
 
   return(
     <li className='note'>
-     Note: {note.content}
+    <span> Note: {note.content}</span>
       <button style={{ marginLeft: 10 }}
         onClick={ () => toggleImportanceOf(note.id)}>Set {note.important?'':'not '}important</button>
         <button onClick={() => removeNote(note.id)}>Remove</button>

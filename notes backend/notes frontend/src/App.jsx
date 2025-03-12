@@ -125,8 +125,8 @@ const App = () => {
         <Toggleable
           visibilityOnStart={true}
           ref={noteRef}
-          labelVisible="Hide notes"
-          labelInvisible="Show notes"
+          labelVisible="Close"
+          labelInvisible="Add new note"
         >
           <NewNoteForm
             createNote={createNote}
