@@ -36,7 +36,7 @@ const addNote = async (page, content = '') => {
     await showNewNote(page)
     await page.getByTestId('note-content').fill(content)
     await page.getByRole('button', {name: 'Add'}).click()
-    return await expect(page.getByText(content)).toBeVisible()
+    return await page.getByText(content).waitFor()
 }
 
 module.exports = {userLogin, login, addNote}
