@@ -20,12 +20,15 @@ const noteReducer = (state = initialState, {type, payload}) => {
     {
         case 'NEW_NOTE': return state.concat(payload)
         case 'WIPE_NOTES': return []
+        case 'MAKE_IMPORTANT' : {
+            return state.map(n => n.id === payload.id?{...n, important:payload.important}:n)
+        }
         default: return state
     }
 }
 
-const noteContentReducer = (state = '', {payload}) => {
-    if (payload !== undefined)
+const noteContentReducer = (state = '', {type, payload}) => {
+    if (type === 'NEW_NOTE_CONTENT')
     {
         state = payload
     }
@@ -61,10 +64,14 @@ const addNote = (note) => {
     }
     store.dispatch({type: 'NEW_NOTE', payload: newNote})
 }
+const changeNoteImportance = (id, important) => {
+    const noteInfo = {id, important}
+    store.dispatch({type: 'MAKE_IMPORTANT', payload: noteInfo})
+}
 const cleanNotes = () => store.dispatch({type: 'WIPE_NOTES'})
 const toggleVisibility = () => store.dispatch({type: 'TOGGLE'})
 const editNewNote = (content) => {
-    store.dispatch({type: '', payload: content})
+    store.dispatch({type: 'NEW_NOTE_CONTENT', payload: content})
 }
 
 const App = () => {
@@ -74,7 +81,12 @@ const App = () => {
         return(
             <ul>
                 {visibleNotes.map(n =>
-                   <li key={n.id}>{n.content}</li>
+                   <li key={n.id}>{n.content}
+                       <button
+                           onClick={() => changeNoteImportance(n.id, !n.important)} >
+                           {n.important?'Make not important':'Make important'}
+                       </button>
+                   </li>
                 )}
             </ul>
         )
