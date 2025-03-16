@@ -47,7 +47,6 @@ const visibilityReducer = (state = false, {type}) => {
 const reducerManager = combineReducers({
     notes: noteReducer,
     visibility: visibilityReducer,
-    newNoteContent: noteContentReducer
 })
 
 export default reducerManager
