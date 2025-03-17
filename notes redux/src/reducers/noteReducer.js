@@ -1,5 +1,3 @@
-import {combineReducers} from "redux";
-
 const initialState = [
     {
         content: 'Redux es poderoso para manejar estado',
@@ -36,17 +34,4 @@ export const createNote = (content) => {
 }
 export const toggleImportanceOf = (id) => ({type: 'TOGGLE_IMPORTANCE', payload: {id} })
 
-const visibilityReducer = (state = false, {type}) => {
-    switch (type) {
-        case 'SHOW_IMPORTANT': return true
-        case 'SHOW_ALL': return false
-        case 'TOGGLE': return !state
-        default: return state
-    }
-}
-const reducerManager = combineReducers({
-    notes: noteReducer,
-    visibility: visibilityReducer,
-})
-
-export default reducerManager
+export default noteReducer
