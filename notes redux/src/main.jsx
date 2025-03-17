@@ -1,8 +1,9 @@
 import { createRoot } from 'react-dom/client'
 import { configureStore } from '@reduxjs/toolkit'
-import {Provider} from 'react-redux'
+import { Provider } from 'react-redux'
 import noteReducer from './reducers/noteReducer.js'
 import filterReducer from './reducers/filterReducer.js'
+import noteService from './services/notes.js'
 import App from './App.jsx'
 
 const store = configureStore({
@@ -29,5 +30,6 @@ const renderApp = () =>{
         <App />
         </Provider>
     )
+
 }
 renderApp()
