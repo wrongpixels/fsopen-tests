@@ -1,3 +1,5 @@
+import { createSlice, current } from '@reduxjs/toolkit'
+
 const initialState = [
     {
         content: 'Redux es poderoso para manejar estado',
@@ -10,28 +12,28 @@ const initialState = [
         id: 2
     }
 ];
-const noteReducer = (state = initialState, {type, payload}) => {
-    switch(type)
-    {
-        case 'NEW_NOTE': return state.concat(payload)
-        case 'WIPE_NOTES': return []
-        case 'TOGGLE_IMPORTANCE' : {
-            return state.map(n => n.id === payload.id?{...n, important:!n.important}:n)
+
+const generateId = () => Number((Math.random() * 1000000).toFixed(0))
+
+const noteSlice = createSlice({
+    name: 'notes',
+    initialState,
+    reducers: {
+        createNote(state, action){
+            const content = action.payload
+            state.push({
+                content: content,
+                important: false,
+                id: generateId()
+            })
+        },
+        toggleImportanceOf(state, action){
+            const note = state.find(n => n.id === action.payload)
+            note.important = !note.important
+            console.log(current(state))
         }
-        default: return state
     }
-}
-const generateId = () =>
-    Number((Math.random() * 1000000).toFixed(0))
 
-export const createNote = (content) => {
-    const payload = {
-        content: content,
-        important: true,
-        id: generateId()
-    }
-    return { type: 'NEW_NOTE', payload }
-}
-export const toggleImportanceOf = (id) => ({type: 'TOGGLE_IMPORTANCE', payload: {id} })
-
-export default noteReducer
+})
+export const { createNote, toggleImportanceOf } = noteSlice.actions
+export default noteSlice.reducer
