@@ -7,7 +7,7 @@
     },
     {
       "content": "state changes are made with actions",
-      "important": false,
+      "important": true,
       "id": "2"
     },
     {
@@ -23,6 +23,16 @@
     {
       "id": "a668",
       "content": "dcsdscs",
+      "important": true
+    },
+    {
+      "id": "37b1",
+      "content": "Testing Add",
+      "important": false
+    },
+    {
+      "id": "91e6",
+      "content": "Does it work?",
       "important": false
     }
   ]

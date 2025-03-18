@@ -1,35 +1,11 @@
 import { createRoot } from 'react-dom/client'
-import { configureStore } from '@reduxjs/toolkit'
 import { Provider } from 'react-redux'
-import noteReducer from './reducers/noteReducer.js'
-import filterReducer from './reducers/filterReducer.js'
-import noteService from './services/notes.js'
 import App from './App.jsx'
+import store from './store.js'
 
-const store = configureStore({
-    reducer: {
-            notes: noteReducer,
-            filter: filterReducer
-        }
-})
+createRoot(document.getElementById('root')).render(
+    <Provider store={store}>
+    <App />
+</Provider>
+)
 
-store.subscribe(() => {
-    const storeNow = store.getState()
-    console.log(storeNow)
-})
-/*  <input  value={newNoteContent}
-                onChange={({target}) => editNewNote(target.value)}
-                />
-                */
-
-const root = createRoot(document.getElementById('root'))
-
-const renderApp = () =>{
-    root.render(
-        <Provider store={store}>
-        <App />
-        </Provider>
-    )
-
-}
-renderApp()
