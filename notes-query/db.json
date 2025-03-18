@@ -1,0 +1,94 @@
+{
+  "notes": [
+    {
+      "content": "the app state is in redux store",
+      "important": true,
+      "id": "1"
+    },
+    {
+      "content": "state changes are made with actions",
+      "important": false,
+      "id": "2"
+    },
+    {
+      "id": "2994",
+      "content": "cdscsc",
+      "important": false
+    },
+    {
+      "id": "5305",
+      "content": "edwcc",
+      "important": true
+    },
+    {
+      "id": "a668",
+      "content": "dcsdscs",
+      "important": false
+    },
+    {
+      "id": "37b1",
+      "content": "Testing Add",
+      "important": false
+    },
+    {
+      "id": "91e6",
+      "content": "Does it work?",
+      "important": true
+    },
+    {
+      "id": "97bd",
+      "content": "asasas",
+      "important": true
+    },
+    {
+      "id": "d025",
+      "content": "Testing",
+      "important": true
+    },
+    {
+      "id": "c8c2",
+      "content": "erfefef",
+      "important": true
+    },
+    {
+      "id": "c260",
+      "content": "xsaaxax",
+      "important": false
+    },
+    {
+      "id": "0c07",
+      "content": "ewewe",
+      "important": false
+    },
+    {
+      "id": "6da6",
+      "content": "ssaxxs",
+      "important": true
+    },
+    {
+      "id": "9dad",
+      "content": "ecwecwcc",
+      "important": true
+    },
+    {
+      "id": "354c",
+      "content": "weewdwed",
+      "important": true
+    },
+    {
+      "id": "92a2",
+      "content": "saxsax",
+      "important": true
+    },
+    {
+      "id": "1c96",
+      "content": "axax",
+      "important": true
+    },
+    {
+      "id": "f74d",
+      "content": "edwdwedwd",
+      "important": true
+    }
+  ]
+}
