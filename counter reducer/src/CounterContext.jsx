@@ -1,4 +1,4 @@
-import { createContext, useReducer } from 'react'
+import { createContext, useReducer, useContext } from 'react'
 
 const counterReducer = (state = 0, { type }) => {
     switch (type){
@@ -9,6 +9,10 @@ const counterReducer = (state = 0, { type }) => {
     }
 }
 const CounterContext = createContext()
+
+export const useDispatch = () => useContext(CounterContext)[1]
+
+export const useState = () => useContext(CounterContext)[0]
 
 export const CounterContextProvider = (props) => {
     const counterValues = useReducer(counterReducer, 0)
