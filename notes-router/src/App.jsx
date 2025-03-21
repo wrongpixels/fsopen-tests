@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Table, Form, Button, Alert, Navbar } from 'react-bootstrap'
 
 import {
     Routes,
@@ -35,13 +36,18 @@ const Note = ({ note }) => {
 const Notes = ({ notes }) => (
     <div>
         <h2>Notes</h2>
-        <ul>
+
+        <Table striped>
+            <tbody>
             {notes.map(note =>
-                <li key={note.id}>
-                    <Link to={`/notes/${note.id}`}>{note.content}</Link>
-                </li>
+                <tr key={note.id}>
+                    <td>
+                        <Link to={`/notes/${note.id}`}>{note.content}</Link>
+                    </td>
+                </tr>
             )}
-        </ul>
+            </tbody>
+        </Table>
     </div>
 )
 
@@ -68,21 +74,29 @@ const Login = (props) => {
     return (
         <div>
             <h2>login</h2>
-            <form onSubmit={onSubmit}>
-                <div>
-                    username: <input />
-                </div>
-                <div>
-                    password: <input type='password' />
-                </div>
-                <button type="submit">login</button>
-            </form>
+            <Form onSubmit={onSubmit}>
+                <Form.Group>
+                    <Form.Label>username:</Form.Label>
+                    <Form.Control
+                        type="text"
+                        name="username"
+                        />
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>password:</Form.Label>
+                    <Form.Control
+                        type="text"
+                        name="password"
+                        />
+                </Form.Group>
+                <Button variant="primary" type="submit">login</Button>
+            </Form>
         </div>
     )
 }
 
 const App = () => {
-
+    const [message, setMessage] = useState('')
     const [notes, setNotes] = useState([
         {
             id: 1,
@@ -103,12 +117,17 @@ const App = () => {
             user: 'Arto Hellas'
         }
     ])
+
+    const runNotification = (notification) => setMessage(notification)
+    setTimeout(() => setMessage(''), 5000)
+
     const match = useMatch('/notes/:id')
     const activeNote = match?notes.find(n => n.id === Number(match.params.id)):null
     const [user, setUser] = useState(null)
 
     const login = (user) => {
         setUser(user)
+        runNotification(`Welcome back,${user}!`)
     }
 
     const padding = {
@@ -116,7 +135,8 @@ const App = () => {
     }
 
     return (
-        <div>
+        <div className="container">
+            {(message && <Alert variant="success"> {message}</Alert>)}
                 <div>
                     <Link style={padding} to="/">home</Link>
                     <Link style={padding} to="/notes">notes</Link>
