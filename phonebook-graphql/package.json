@@ -1,0 +1,37 @@
+{
+  "name": "phonebook-backend",
+  "version": "0.0.1",
+  "description": "As recommended, a dedicated repository for the Part 3 exercises",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "lint": "eslint .",
+    "lintfix": "eslint . --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wrongpixels/fsopen-part3.git"
+  },
+  "author": "Alvaro Moreno",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wrongpixels/fsopen-part3/issues"
+  },
+  "homepage": "https://github.com/wrongpixels/fsopen-part3#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongoose": "^8.9.6",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.19.0",
+    "@flydotio/dockerfile": "^0.7.4",
+    "@stylistic/eslint-plugin-js": "^3.0.1",
+    "globals": "^15.14.0",
+    "nodemon": "^3.1.9"
+  }
+}
