@@ -1,3 +1,5 @@
+
+node_modules/
 /webpack-test/node_modules/
 /webpack-test-anecdotes/node_modules/.bin/acorn
 /webpack-test-anecdotes/node_modules/.bin/acorn.cmd

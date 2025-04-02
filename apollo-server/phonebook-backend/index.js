@@ -26,10 +26,9 @@ let persons = [
   },
 ]
 
-const typeDefs = `
+const typeDefs = /*GraphQL*/ `
 
-type Address{
-street: String!
+type Address{street: String!
 city: String!
 }
 
@@ -40,7 +39,8 @@ phone: String
 id: ID!
 }
 
-enum YesNo {
+
+enum YesNo { 
 YES
 NO
 }
@@ -54,13 +54,15 @@ findPerson(name: String!): Person
 type Mutation{
 
 changeNumber(
+  
+  
 name: String!
 phone: String!
 ): Person
 
 
 addPerson(
-name: String!
+ name: String!
 phone: String
 street: String!
 city: String!

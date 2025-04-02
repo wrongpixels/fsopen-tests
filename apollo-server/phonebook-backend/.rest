@@ -1,0 +1,9 @@
+@url = http://localhost:4000/graphql
+
+###TRY GET ALL
+POST {{url}}
+Content-Type: application/json
+
+{
+  "query": "query { allPersons{ name }}"
+}
