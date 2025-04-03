@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useQuery, useMutation } from '@apollo/client'
-import useField from '../hooks/useField.js'
+import useField from '../hooks/useField.jsx'
 import { FIND_PERSON, EDIT_NUMBER } from '../queries.js'
 import { useNotification } from '../context/NotificationContext.jsx'
 
@@ -56,11 +56,30 @@ const Person = ({ person, showAll }) => {
 }
 
 const Persons = ({ persons }) => {
+  const { sendNotification } = useNotification()
+
   const [personToFind, setNameToSearch] = useState('')
   const result = useQuery(FIND_PERSON, {
     variables: { personToFind },
     skip: !personToFind,
   })
+  const [editNum] = useMutation(EDIT_NUMBER, {
+    onError: (e) =>
+      sendNotification(e.graphQLErrors.map((e) => e.message).join(' ,')),
+  })
+  const editNameField = useField()
+  const editNumField = useField()
+
+  const editNumber = (e) => {
+    e.preventDefault()
+    editNum({
+      variables: {
+        name: editNameField.value,
+        phone: editNumField.value,
+      },
+    })
+  }
+
   return (
     <>
       <h2>Persons</h2>
@@ -80,6 +99,12 @@ const Persons = ({ persons }) => {
           </div>
         )
       })}
+      <h2>Edit a number</h2>
+      <form onSubmit={editNumber}>
+        Person: {editNameField.field()}
+        New number: {editNumField.field()}
+        <button type="submit">Edit</button>
+      </form>
     </>
   )
 }
