@@ -1,43 +1,20 @@
-import { useState } from 'react'
-import { gql, useMutation } from '@apollo/client'
+import useField from '../hooks/useField.js'
+import { useMutation } from '@apollo/client'
+import { ADD_PERSON, ALL_PERSONS } from '../queries.js'
+import { useNotification } from '../context/NotificationContext.jsx'
 
-const CREATE_PERSON = gql`
-  mutation addPersonByData(
-    $name: String!
-    $phone: String
-    $city: String!
-    $street: String!
-  ) {
-    addPerson(name: $name, phone: $phone, city: $city, street: $street) {
-      name
-      phone
-      address {
-        city
-        street
-      }
-    }
-  }
-`
+const PersonForm = () => {
+  const { sendNotification } = useNotification()
 
-const inputField = (type, name = '') => {
-  const [value, setValue] = useState('')
-  const onChange = (e) => setValue(e.target.value)
-  const clear = () => setValue('')
-  return {
-    value,
-    props: { value, type, name, onChange },
-    functions: { clear },
-  }
-}
-
-const PersonForm = ({ ALL_PERSONS }) => {
-  const [createPerson] = useMutation(CREATE_PERSON, {
+  const [createPerson] = useMutation(ADD_PERSON, {
     refetchQueries: [{ query: ALL_PERSONS }],
+    onError: (e) =>
+      sendNotification(e.graphQLErrors.map((e) => e.message).join('\n'), true),
   })
-  const nameField = inputField('text')
-  const phoneField = inputField('number')
-  const streetField = inputField('text')
-  const cityField = inputField('text')
+  const nameField = useField('text')
+  const phoneField = useField('number')
+  const streetField = useField('text')
+  const cityField = useField('text')
   return (
     <div>
       <form
