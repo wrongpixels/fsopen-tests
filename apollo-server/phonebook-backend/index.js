@@ -124,6 +124,7 @@ const resolvers = {
       return !args.phone ? Person.find({}) : Person.find({ phone: args.phone })
     },
     findPerson: async (root, args) => Person.findOne({ name: args.name }),
+    me: (root, args, { currentUser }) => currentUser,
   },
   Person: {
     address: (root) => ({ city: root.city, street: root.street }),
@@ -182,6 +183,15 @@ const server = new ApolloServer({
 
 startStandaloneServer(server, {
   listen: { port: config.PORT },
+  context: async ({ req, res }) => {
+    const decodedToken = req?.headers?.authorization?.startsWith('Bearer ')
+      ? jwt.verify(req.headers.authorization.substring(7), config.SECRET)
+      : null
+    const currentUser = decodedToken
+      ? await User.findById(decodedToken.id).populate('friends')
+      : null
+    return { currentUser }
+  },
 }).then(({ url }) => {
   console.log(`server ready at ${url}`)
 })
