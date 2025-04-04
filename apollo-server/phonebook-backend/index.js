@@ -1,7 +1,20 @@
 const { ApolloServer } = require('@apollo/server')
+const jwt = require('jsonwebtoken')
 const { startStandaloneServer } = require('@apollo/server/standalone')
-const { v1: uuid } = require('uuid')
 const { GraphQLError } = require('graphql')
+const config = require('./utils/config')
+const mongoose = require('mongoose')
+const Person = require('./models/person')
+const User = require('./models/user')
+
+const MONGODB_URI = config.MONGODB_URI
+
+mongoose.set('strictQuery', false)
+
+mongoose
+  .connect(MONGODB_URI)
+  .then(() => console.log('Connected to Mongoose'))
+  .catch((e) => console.log('error', e.message))
 
 let persons = [
   {
@@ -32,6 +45,16 @@ type Address{street: String!
 city: String!
 }
 
+type User {
+  username: String!,
+  friends: [Person!]!,
+  id: ID!
+}
+
+type Token {
+  value: String!
+}
+
 type Person {
 name: String!
 address: Address!
@@ -49,13 +72,18 @@ type Query {
 personCount: Int!
 allPersons(phone: YesNo): [Person!]!
 findPerson(name: String!): Person
+  me: User
 }
 
-type Mutation{
+type Mutation{  
+  addUser(username: String!    
+  ): User
+  
+  login(username: String!
+    password: String!
+  ): Token
 
 changeNumber(
-  
-  
 name: String!
 phone: String!
 ): Person
@@ -70,50 +98,70 @@ city: String!
 }
 `
 
-const throwError = (message, code, invalidArgs) => {
+const throwError = (message, code, invalidArgs, error = null) => {
   throw new GraphQLError(message, {
     extensions: {
       code,
       invalidArgs,
+      error,
     },
   })
 }
 
+const trySave = async (person, value = 'value') => {
+  try {
+    await person.save()
+    return person
+  } catch (e) {
+    throwError(`Saving ${value} failed`, 'BAD_USER_INPUT', value, e)
+  }
+}
+
 const resolvers = {
   Query: {
-    personCount: () => persons.length,
-    allPersons: (root, args) => {
-      return !args.phone
-        ? persons
-        : persons.filter((p) => (args.phone === 'YES' ? p.phone : !p.phone))
+    personCount: async () => Person.collection.countDocuments(),
+    allPersons: async (root, args) => {
+      return !args.phone ? Person.find({}) : Person.find({ phone: args.phone })
     },
-    findPerson: (root, args) => persons.find((p) => p.name === args.name),
+    findPerson: async (root, args) => Person.findOne({ name: args.name }),
   },
   Person: {
     address: (root) => ({ city: root.city, street: root.street }),
   },
   Mutation: {
-    addPerson: (root, args) => {
-      if (persons.find((p) => p.name === args.name)) {
-        throw new GraphQLError('Name must be unique', {
-          extensions: {
-            code: 'BAD_USER_INPUT',
-            invalidArgs: args.name,
-          },
-        })
+    createUser: async (root, { username, password = null }) => {
+      if (!username) {
+        throwError('Missing username', 'MISSING_DATA', username)
       }
-      persons = persons.concat({ ...args, id: uuid() })
-      return persons[persons.length - 1]
+      if (await User.findOne({ username })) {
+        throwError('Username already exists!', 'BAD_USER_INPUT', username)
+      }
+      return trySave(new Person({ username }), 'user')
     },
-    changeNumber: (root, args) => {
-      const person = persons.find((p) => p.name === args.name)
+
+    addPerson: async (root, args) => {
+      const existing = await Person.findOne({ name: args.name })
+      if (existing) {
+        throwError('Person already exists!', 'BAD_USER_INPUT', args.name)
+      }
+      const newPerson = new Person({ ...args })
+      return trySave(newPerson, 'person')
+    },
+    changeNumber: async (root, args) => {
+      const person = await Person.findOne({ name: args.name })
       if (!person) {
         throwError('User name cannot be found', 'SERVER_ERROR', args.name)
       }
-      const editedPerson = { ...person, phone: args.phone }
 
-      persons = persons.map((p, i) => (p.name === args.name ? editedPerson : p))
-      return editedPerson
+      return Person.findOneAndUpdate(
+        { name: args.name },
+        { phone: args.phone },
+        {
+          new: true,
+          runValidators: true,
+          context: 'query',
+        }
+      )
     },
   },
 }
@@ -124,7 +172,7 @@ const server = new ApolloServer({
 })
 
 startStandaloneServer(server, {
-  listen: { port: 4000 },
+  listen: { port: config.PORT },
 }).then(({ url }) => {
   console.log(`server ready at ${url}`)
 })
