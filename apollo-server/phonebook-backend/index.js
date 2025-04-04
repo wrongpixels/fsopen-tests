@@ -75,8 +75,8 @@ findPerson(name: String!): Person
   me: User
 }
 
-type Mutation{  
-  addUser(username: String!    
+type Mutation{
+  createUser(username: String!    
   ): User
   
   login(username: String!
@@ -136,7 +136,16 @@ const resolvers = {
       if (await User.findOne({ username })) {
         throwError('Username already exists!', 'BAD_USER_INPUT', username)
       }
-      return trySave(new Person({ username }), 'user')
+      return trySave(new User({ username }), 'user')
+    },
+
+    login: async (root, { username, password }) => {
+      const user = await User.findOne({ username })
+      if (!user || password !== 'secret') {
+        throwError('Login data is so wrong!', 'WRONG_CREDENTIALS', '')
+      }
+      const tokenData = { username, id: user._id }
+      return { value: jwt.sign(tokenData, config.SECRET) }
     },
 
     addPerson: async (root, args) => {
