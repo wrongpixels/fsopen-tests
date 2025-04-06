@@ -7,9 +7,14 @@ const PersonForm = () => {
   const { sendNotification } = useNotification()
 
   const [createPerson] = useMutation(ADD_PERSON, {
-    refetchQueries: [{ query: ALL_PERSONS }],
     onError: (e) =>
       sendNotification(e.graphQLErrors.map((e) => e.message).join('\n'), true),
+    onCompleted: (data) =>
+      sendNotification(`${data.addPerson.name} was added!`),
+    update: (cache, response) =>
+      cache.updateQuery({ query: ALL_PERSONS }, (cachedQuery) => ({
+        allPersons: cachedQuery.allPersons.concat(response.data.addPerson),
+      })),
   })
   const nameField = useField('text')
   const phoneField = useField('number')
@@ -23,7 +28,7 @@ const PersonForm = () => {
           createPerson({
             variables: {
               name: nameField.value,
-              phone: phoneField.value,
+              phone: phoneField.value || undefined,
               city: cityField.value,
               street: streetField.value,
             },
