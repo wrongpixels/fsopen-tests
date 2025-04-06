@@ -30,6 +30,14 @@ export const FIND_PERSON = gql`
   }
 `
 
+export const LOGIN = gql`
+  mutation loginUser($username: String!, $password: String!) {
+    login(username: $username, password: $password) {
+      value
+    }
+  }
+`
+
 export const ADD_PERSON = gql`
 mutation addByName ($name: String!, $phone: String, $city: String!, $street: String!) {
   addPerson(name: $name, phone: $phone, street: $street, city: $city){

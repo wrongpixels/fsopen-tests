@@ -96,7 +96,7 @@ const trySave = async (person, value = 'value') => {
     await person.save()
     return person
   } catch (e) {
-    throwError(`Saving ${value} failed`, 'BAD_USER_INPUT', value, e)
+    throwError(e.message, 'BAD_USER_INPUT', value, e)
   }
 }
 
@@ -105,7 +105,7 @@ const checkLogged = (currentUser) => {
     throwError(
       'You need to be logged in in order to add friends!',
       'AUTHENTICATION_ERROR',
-      ''
+      '',
     )
   }
 }
@@ -131,7 +131,7 @@ const resolvers = {
       }
       if (
         currentUser.friends.find(
-          (f) => f._id.toString() === personToAdd._id.toString()
+          (f) => f._id.toString() === personToAdd._id.toString(),
         )
       ) {
         throwError('User is already a friend!', 'INPUT_ERROR', 'name')
@@ -167,7 +167,7 @@ const resolvers = {
         throwError(
           'Friend with same name already exists!',
           'BAD_USER_INPUT',
-          args.name
+          args.name,
         )
       }
       const newPerson = new Person({ ...args })
@@ -188,7 +188,7 @@ const resolvers = {
           new: true,
           runValidators: true,
           context: 'query',
-        }
+        },
       )
     },
   },
