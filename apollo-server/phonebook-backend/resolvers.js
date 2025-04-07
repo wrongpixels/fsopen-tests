@@ -1,8 +1,11 @@
 const { GraphQLError } = require('graphql')
+const { PubSub } = require('graphql-subscriptions')
 const Person = require('./models/person')
 const User = require('./models/user')
 const jwt = require('jsonwebtoken')
 const config = require('./utils/config')
+
+const pubsub = new PubSub()
 
 const throwError = (message, code, invalidArgs, error = null) => {
   throw new GraphQLError(message, {
@@ -28,7 +31,7 @@ const checkLogged = (currentUser) => {
     throwError(
       'You need to be logged in in order to add friends!',
       'AUTHENTICATION_ERROR',
-      ''
+      '',
     )
   }
 }
@@ -54,7 +57,7 @@ const resolvers = {
       }
       if (
         currentUser.friends.find(
-          (f) => f._id.toString() === personToAdd._id.toString()
+          (f) => f._id.toString() === personToAdd._id.toString(),
         )
       ) {
         throwError('User is already a friend!', 'INPUT_ERROR', 'name')
@@ -90,12 +93,13 @@ const resolvers = {
         throwError(
           'Friend with same name already exists!',
           'BAD_USER_INPUT',
-          args.name
+          args.name,
         )
       }
       const newPerson = new Person({ ...args })
       currentUser.friends = currentUser.friends.concat(newPerson)
       await trySave(currentUser, 'current user')
+      pubsub.publish('PERSON_ADDED', { personAdded: newPerson })
       return trySave(newPerson, 'new person')
     },
     changeNumber: async (root, args) => {
@@ -111,8 +115,13 @@ const resolvers = {
           new: true,
           runValidators: true,
           context: 'query',
-        }
+        },
       )
+    },
+  },
+  Subscription: {
+    personAdded: {
+      subscribe: () => pubsub.asyncIterableIterator('PERSON_ADDED'),
     },
   },
 }

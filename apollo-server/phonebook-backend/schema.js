@@ -33,6 +33,10 @@ const typeDefs = /*GraphQL*/ `
         findPerson(name: String!): Person
         me: User
     }
+    
+    type Subscription{
+        personAdded: Person!
+    }
 
     type Mutation{
         createUser(username: String!
