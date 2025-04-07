@@ -1,33 +1,40 @@
 import { gql } from '@apollo/client'
 
-const basic = `
-  name
-phone
-id
+const PERSON_DETAILS = gql`
+  fragment PersonDetails on Person {
+    name
+    phone
+    id
+  }
 `
-const address = `address {
-street
-city
-}`
-
-const regularSchema = (full = false) => {
-  return !full ? basic : basic + address
-}
+const FULL_PERSON_DETAILS = gql`
+  fragment FullPersonDetails on Person {
+    name
+    phone
+    id
+    address {
+      street
+      city
+    }
+  }
+`
 
 export const ALL_PERSONS = gql`
   query {
     allPersons {
-      ${regularSchema()}
+      ...PersonDetails
     }
   }
+  ${PERSON_DETAILS}
 `
 
 export const FIND_PERSON = gql`
-  query  findByName($personToFind: String!) {
+  query findByName($personToFind: String!) {
     findPerson(name: $personToFind) {
-      ${regularSchema(true)}
+      ...FullPersonDetails
     }
   }
+  ${FULL_PERSON_DETAILS}
 `
 
 export const LOGIN = gql`
@@ -39,16 +46,23 @@ export const LOGIN = gql`
 `
 
 export const ADD_PERSON = gql`
-mutation addByName ($name: String!, $phone: String, $city: String!, $street: String!) {
-  addPerson(name: $name, phone: $phone, street: $street, city: $city){
-     ${regularSchema(true)}
+  mutation addByName(
+    $name: String!
+    $phone: String
+    $city: String!
+    $street: String!
+  ) {
+    addPerson(name: $name, phone: $phone, street: $street, city: $city) {
+      ...FullPersonDetails
+    }
   }
-}
+  ${FULL_PERSON_DETAILS}
 `
 export const EDIT_NUMBER = gql`
-  mutation replaceNumber($name: String!, $phone: String!){
-    changeNumber(name: $name, phone: $phone){
-      ${regularSchema()}
+  mutation replaceNumber($name: String!, $phone: String!) {
+    changeNumber(name: $name, phone: $phone) {
+      ...PersonDetails
     }
-  } 
+  }
+  ${PERSON_DETAILS}
 `

@@ -4,7 +4,7 @@ import useField from '../hooks/useField.jsx'
 import { FIND_PERSON, EDIT_NUMBER } from '../queries.js'
 import { useNotification } from '../context/NotificationContext.jsx'
 
-const drawData = (person) => {
+const Person = ({ person, showAll }) => {
   const { sendNotification } = useNotification()
   const [editNumber, setEditNumber] = useState(false)
   const editPhoneField = useField('text')
@@ -12,7 +12,6 @@ const drawData = (person) => {
     onError: (e) =>
       sendNotification(e.graphQLErrors.map((e) => e.message).join(' ,')),
   })
-
   const replaceNumber = () => {
     replaceNum({
       variables: {
@@ -25,32 +24,33 @@ const drawData = (person) => {
   if (!person) {
     return null
   }
-  return (
-    <div>
-      <div>
-        {person.address.street} {person.address.city}
-      </div>
-      <div>
-        {person.phone}{' '}
-        <button onClick={() => setEditNumber(!editNumber)}>
-          {(person.phone ? 'Edit' : 'Add') + ' number'}
-        </button>
-        {editNumber && (
-          <div>
-            <input {...editPhoneField.props} />
-            <button onClick={replaceNumber}>Save</button>
-          </div>
-        )}
-      </div>
-    </div>
-  )
-}
-
-const Person = ({ person, showAll }) => {
+  if (!showAll) {
+    return (
+      <>
+        <h2>{person.name}</h2>
+      </>
+    )
+  }
   return (
     <div>
       <h2>{person.name}</h2>
-      {showAll && drawData(person)}
+      <div>
+        <div>
+          {person.address.street} {person.address.city}
+        </div>
+        <div>
+          {person.phone}
+          <button onClick={() => setEditNumber(!editNumber)}>
+            {(person.phone ? 'Edit' : 'Add') + ' number'}
+          </button>
+          {editNumber && (
+            <div>
+              <input {...editPhoneField.props} />
+              <button onClick={replaceNumber}>Save</button>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   )
 }
