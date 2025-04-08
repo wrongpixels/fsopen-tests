@@ -31,7 +31,7 @@ const checkLogged = (currentUser) => {
     throwError(
       'You need to be logged in in order to add friends!',
       'AUTHENTICATION_ERROR',
-      '',
+      ''
     )
   }
 }
@@ -40,7 +40,11 @@ const resolvers = {
   Query: {
     personCount: async () => Person.collection.countDocuments(),
     allPersons: async (root, args) => {
-      return !args.phone ? Person.find({}) : Person.find({ phone: args.phone })
+      console.log('Person.find')
+
+      return !args.phone
+        ? Person.find({}).populate('friendOf')
+        : Person.find({ phone: args.phone }).populate('friendOf')
     },
     findPerson: async (root, args) => Person.findOne({ name: args.name }),
     me: (root, args, { currentUser }) => currentUser,
@@ -57,7 +61,7 @@ const resolvers = {
       }
       if (
         currentUser.friends.find(
-          (f) => f._id.toString() === personToAdd._id.toString(),
+          (f) => f._id.toString() === personToAdd._id.toString()
         )
       ) {
         throwError('User is already a friend!', 'INPUT_ERROR', 'name')
@@ -93,7 +97,7 @@ const resolvers = {
         throwError(
           'Friend with same name already exists!',
           'BAD_USER_INPUT',
-          args.name,
+          args.name
         )
       }
       const newPerson = new Person({ ...args })
@@ -115,7 +119,7 @@ const resolvers = {
           new: true,
           runValidators: true,
           context: 'query',
-        },
+        }
       )
     },
   },

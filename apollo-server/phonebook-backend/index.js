@@ -21,6 +21,7 @@ const typeDefs = require('./schema')
 const MONGODB_URI = config.MONGODB_URI
 
 mongoose.set('strictQuery', false)
+//mongoose.set('debug', true)
 mongoose
   .connect(MONGODB_URI)
   .then(() => console.log('Connected to Mongoose'))
@@ -65,15 +66,15 @@ const start = async () => {
           : null
         if (decodedToken) {
           const currentUser = await User.findById(decodedToken.id).populate(
-            'friends',
+            'friends'
           )
           return { currentUser }
         }
       },
-    }),
+    })
   )
   httpServer.listen(config.PORT, () =>
-    console.log(`Server is really running on http://localhost:${config.PORT}`),
+    console.log(`Server is really running on http://localhost:${config.PORT}`)
   )
 }
 start()
