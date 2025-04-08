@@ -1,6 +1,7 @@
 import useField from '../hooks/useField.jsx'
 import { useMutation } from '@apollo/client'
 import { ADD_PERSON, ALL_PERSONS } from '../queries.js'
+import { updatePersonsCache } from '../App.jsx'
 import { useNotification } from '../context/NotificationContext.jsx'
 
 const PersonForm = () => {
@@ -12,9 +13,7 @@ const PersonForm = () => {
     onCompleted: (data) =>
       sendNotification(`${data.addPerson.name} was added!`),
     update: (cache, response) =>
-      cache.updateQuery({ query: ALL_PERSONS }, (cachedQuery) => ({
-        allPersons: cachedQuery.allPersons.concat(response.data.addPerson),
-      })),
+      updatePersonsCache(cache, ADD_PERSON, response.data.addPerson),
   })
   const nameField = useField('text')
   const phoneField = useField('number')

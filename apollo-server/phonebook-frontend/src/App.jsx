@@ -1,10 +1,20 @@
-import { useQuery, useApolloClient } from '@apollo/client'
+import { useQuery, useApolloClient, useSubscription } from '@apollo/client'
 import { useState } from 'react'
 import Persons from './components/Persons.jsx'
 import PersonForm from './components/PersonForm.jsx'
 import LoginForm from './components/LoginForm.jsx'
-import { ALL_PERSONS } from './queries.js'
+import { ALL_PERSONS, PERSON_ADDED } from './queries.js'
 import { useNotification } from './context/NotificationContext.jsx'
+
+export const updatePersonsCache = (cache, query, addedPerson) => {
+  cache.updateQuery({ query }, (cachedValue) => {
+    console.log(addedPerson, query)
+
+    if (!cachedValue.allPersons.find((p) => p.name === addedPerson.name)) {
+      return { allPersons: cachedValue.allPersons.concat(addedPerson) }
+    }
+  })
+}
 
 const Notify = () => {
   const { notification } = useNotification()
@@ -20,6 +30,11 @@ const Notify = () => {
 
 const App = () => {
   const { sendNotification } = useNotification()
+  useSubscription(PERSON_ADDED, {
+    onData: ({ data, client }) => {
+      updatePersonsCache(client.cache, ALL_PERSONS, data.data.personAdded)
+    },
+  })
 
   const [token, setToken] = useState(() => localStorage.getItem('user-token'))
   const result = useQuery(ALL_PERSONS)

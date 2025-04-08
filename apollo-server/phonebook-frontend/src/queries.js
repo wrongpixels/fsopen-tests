@@ -44,6 +44,14 @@ export const LOGIN = gql`
     }
   }
 `
+export const PERSON_ADDED = gql`
+  subscription {
+    personAdded {
+      ...FullPersonDetails
+    }
+  }
+  ${FULL_PERSON_DETAILS}
+`
 
 export const ADD_PERSON = gql`
   mutation addByName(
