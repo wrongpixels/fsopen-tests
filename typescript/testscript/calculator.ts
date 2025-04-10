@@ -1,7 +1,7 @@
-type Operation = 'multiply' | 'add' | 'divide';
+export type Operation = 'multiply' | 'add' | 'divide';
 type Result = number | string;
 
-const calculator = (
+export const calculator = (
   number1: number,
   number2: number,
   operation: Operation
