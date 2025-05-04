@@ -1,0 +1,6 @@
+services:
+    app:
+        image: test-thing
+        build: .
+        ports:
+            - 3000:3000
