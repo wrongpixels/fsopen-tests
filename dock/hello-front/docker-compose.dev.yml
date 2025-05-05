@@ -6,6 +6,11 @@ services:
       dockerfile: dev.Dockerfile
     volumes:
       - ./:/usr/src/app
+      - node_modules:/usr/src/app/node_modules
     ports:
-      - 5173:5173
+      - 3210:5173
     container_name: hello-front-dev
+  debug-helper:
+    image: busybox    
+volumes:
+    node_modules:
