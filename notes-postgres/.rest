@@ -3,7 +3,16 @@ POST http://localhost:3001/api/notes
 Content-Type: application/json
 
 {
+    "content": "Contempts",
     "important": true
+}
+
+###PUT
+PUT http://localhost:3001/api/notes/1
+Content-Type: application/json
+
+{
+    "important": false
 }
 
 ###GET
