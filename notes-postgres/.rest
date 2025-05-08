@@ -1,5 +1,5 @@
 ###POST
-POST http://localhost:3001/api/notes
+POST http://localhost:3002/api/notes
 Content-Type: application/json
 
 {
@@ -8,7 +8,7 @@ Content-Type: application/json
 }
 
 ###PUT
-PUT http://localhost:3001/api/notes/1
+PUT http://localhost:3002/api/notes/1
 Content-Type: application/json
 
 {
@@ -17,4 +17,4 @@ Content-Type: application/json
 
 ###GET
 
-GET http://localhost:3001/api/notes
+GET http://localhost:3002/api/notes
