@@ -1,18 +1,42 @@
 const router = require('express').Router()
-const { Note } = require('../models')
+const { Note, User } = require('../models')
+const CustomError = require('../util/customError')
+const jwt = require('jsonwebtoken')
+const { SECRET } = require('../util/config')
 
 const noteFinder = async (req, res, next) => {
   try {
     req.note = await Note.findByPk(req.params.id)
-    if (!req.note)
-    {
+    if (!req.note) {
       return res.status(404).json('Note not found')
     }
     next()
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
+}
 
+const tokenExtractor = async (req, res, next) => {
+  try {
+    const token = req.headers.authorization?.startsWith('Bearer ')
+      ? req.headers.authorization.substring(7)
+      : ''
+    if (!token) {
+      throw new CustomError('Not logged in', 401)
+    }
+    const tokenUser = jwt.verify(token, SECRET)
+    const activeUser = await User.findByPk(tokenUser.id)
+    if (!activeUser || !tokenUser) {
+      throw new CustomError(
+        tokenUser ? 'Invalid user token' : 'Expired or invalid token',
+        401
+      )
+    }
+    req.activeUser = activeUser
+    next()
+  } catch (error) {
+    next(error)
+  }
 }
 
 router.get('/', async (_, res) => {
@@ -45,11 +69,16 @@ router.put('/:id', noteFinder, async (req, res) => {
   }
 })
 
-router.post('/', async (req, res) => {
+router.post('/', tokenExtractor, async (req, res) => {
   try {
+    const user = req.activeUser
     const note = req.body
     console.log(note)
-    const newNote = await Note.create(note)
+    const newNote = await Note.create({
+      ...note,
+      userId: user.id,
+      date: new Date(),
+    })
     res.status(201).json(newNote)
   } catch (e) {
     console.log(e.message)
