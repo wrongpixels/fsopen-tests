@@ -41,7 +41,13 @@ const tokenExtractor = async (req, res, next) => {
 
 router.get('/', async (_, res) => {
   try {
-    const notes = await Note.findAll()
+    const notes = await Note.findAll({
+      attributes: { exclude: ['userId'] },
+      include: {
+        model: User,
+        attributes: ['username'],
+      },
+    })
     res.json(notes)
   } catch (error) {
     res.status(500).json({ error: error.message })

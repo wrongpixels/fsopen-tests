@@ -6,6 +6,7 @@ router.get('/', async (req, res, next) => {
     const users = await User.findAll({
       include: {
         model: Note,
+        attributes: { exclude: ['userId'] },
       },
     })
     res.json(users)
