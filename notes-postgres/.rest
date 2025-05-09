@@ -7,6 +7,24 @@ Content-Type: application/json
     "important": true
 }
 
+###CREATE USER
+POST http://localhost:3002/api/users
+Content-Type: application/json
+
+{
+    "username": "Contempts",
+    "name": "charles"
+}
+
+###LOGIN
+POST http://localhost:3002/api/login
+Content-Type: application/json
+
+{
+    "username": "Contempts",
+    "password": "supersafe"
+}
+
 ###PUT
 PUT http://localhost:3002/api/notes/1
 Content-Type: application/json
