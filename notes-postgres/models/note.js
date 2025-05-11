@@ -16,6 +16,7 @@ Note.init(
     important: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
+      allowNull: false,
     },
     date: {
       type: DataTypes.DATE,
@@ -26,6 +27,6 @@ Note.init(
     underscored: true,
     timestamps: false,
     modelName: 'note',
-  }
+  },
 )
 module.exports = Note

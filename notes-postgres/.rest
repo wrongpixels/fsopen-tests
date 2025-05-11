@@ -1,11 +1,11 @@
 ###POST
 POST http://localhost:3002/api/notes
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJDb250ZW1wdHMiLCJpYXQiOjE3NDY4MDI2NzZ9.Ths3rqAH3cjOWtJA7JznWeUhwkbbshAG7R-_nPJWJAI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJDb250ZW1wdHMiLCJpYXQiOjE3NDY5ODY2MDl9.PTQUl_V49Zvd-t0OixvOOPOLiHNa-Fv-ykD5FWO5ff0
 
 
 {
-    "content": "Nice",
+    "content": "Nice database",
     "important": true
 }
 

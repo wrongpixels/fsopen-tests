@@ -3,6 +3,7 @@ const { Note, User } = require('../models')
 const CustomError = require('../util/customError')
 const jwt = require('jsonwebtoken')
 const { SECRET } = require('../util/config')
+const { Op } = require('sequelize')
 
 const noteFinder = async (req, res, next) => {
   try {
@@ -29,7 +30,7 @@ const tokenExtractor = async (req, res, next) => {
     if (!activeUser || !tokenUser) {
       throw new CustomError(
         tokenUser ? 'Invalid user token' : 'Expired or invalid token',
-        401
+        401,
       )
     }
     req.activeUser = activeUser
@@ -39,14 +40,26 @@ const tokenExtractor = async (req, res, next) => {
   }
 }
 
-router.get('/', async (_, res) => {
+router.get('/', async (req, res) => {
   try {
+    const where = {}
+
+    if (req.query.search) {
+      where.content = {
+        [Op.substring]: req.query.search,
+      }
+    }
+    if (req.query.important) {
+      where.important = req.query.important
+    }
+
     const notes = await Note.findAll({
       attributes: { exclude: ['userId'] },
       include: {
         model: User,
-        attributes: ['username'],
+        attributes: ['name'],
       },
+      where,
     })
     res.json(notes)
   } catch (error) {
