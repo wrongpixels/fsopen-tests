@@ -1,8 +1,6 @@
 const router = require('express').Router()
 const { Note, User } = require('../models')
-const CustomError = require('../util/customError')
-const jwt = require('jsonwebtoken')
-const { SECRET } = require('../util/config')
+const tokenExtractor = require('../middleware/tokenExtractor')
 const { Op } = require('sequelize')
 
 const noteFinder = async (req, res, next) => {
@@ -14,29 +12,6 @@ const noteFinder = async (req, res, next) => {
     next()
   } catch (error) {
     res.status(500).json({ error: error.message })
-  }
-}
-
-const tokenExtractor = async (req, res, next) => {
-  try {
-    const token = req.headers.authorization?.startsWith('Bearer ')
-      ? req.headers.authorization.substring(7)
-      : ''
-    if (!token) {
-      throw new CustomError('Not logged in', 401)
-    }
-    const tokenUser = jwt.verify(token, SECRET)
-    const activeUser = await User.findByPk(tokenUser.id)
-    if (!activeUser || !tokenUser) {
-      throw new CustomError(
-        tokenUser ? 'Invalid user token' : 'Expired or invalid token',
-        401,
-      )
-    }
-    req.activeUser = activeUser
-    next()
-  } catch (error) {
-    next(error)
   }
 }
 

@@ -1,5 +1,7 @@
 const router = require('express').Router()
 const { User, Note } = require('../models')
+const tokenExtractor = require('../middleware/tokenExtractor')
+const isAdmin = require('../middleware/isAdmin')
 
 router.get('/', async (req, res, next) => {
   try {
@@ -18,6 +20,24 @@ router.get('/', async (req, res, next) => {
 router.get('/:id', async (req, res, next) => {
   try {
     const user = await User.findByPk(req.params.id)
+    res.json(user)
+  } catch (error) {
+    next(error)
+  }
+})
+
+router.put('/:username', tokenExtractor, isAdmin, async (req, res, next) => {
+  try {
+    const user = await User.findOne({
+      where: {
+        username: req.params.username,
+      },
+    })
+    if (!user) {
+      return res.status(404)
+    }
+    user.disabled = req.body.disabled
+    await user.save()
     res.json(user)
   } catch (error) {
     next(error)

@@ -23,8 +23,17 @@ POST http://localhost:3002/api/login
 Content-Type: application/json
 
 {
-    "username": "Contempts 3",
+    "username": "Contempts 2",
     "password": "supersafe"
+}
+
+###CHANGE USER DISABILITY
+PUT http://localhost:3002/api/users/Contempts 9
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJDb250ZW1wdHMgMyIsImlhdCI6MTc0NzA2NjIyOH0.fYpBxdPdpyHdnvISMV1tH4eN5RFF8g1lTpL63oQe92s
+
+{
+    "disabled": true
 }
 
 ###PUT
