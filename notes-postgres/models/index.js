@@ -8,7 +8,5 @@ Note.belongsTo(User, {
     allowNull: false,
   },
 })
-User.sync({ alter: true })
-Note.sync({ alter: true })
 
 module.exports = { Note, User }
