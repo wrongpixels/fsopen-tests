@@ -9,7 +9,7 @@
   "scripts": {
     "test": "run test",
     "start": "node index.js",
-    "dev": "nodemon index.js",
+    "dev": "nodemon --ignore migrations index.js",
     "migration:down": "node util/rollback.js"
   },
   "dependencies": {
