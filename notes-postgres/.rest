@@ -1,12 +1,12 @@
 ###POST
 POST http://localhost:3002/api/notes
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJDb250ZW1wdHMgMyIsImlhdCI6MTc0NzA2NjIyOH0.fYpBxdPdpyHdnvISMV1tH4eN5RFF8g1lTpL63oQe92s
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJDb250ZW1wdHMgMiIsImlhdCI6MTc0NzI0MzE4M30.XbEl3qBsbcqZFqVmyQdgJPLsXKw35Znles8g57D45Fk
 
 
 {
-    "content": "Very cool database",
-    "important": false
+    "content": "Very cfdfdfool database INDEED",
+    "important": true
 }
 
 ###CREATE USER
@@ -14,7 +14,7 @@ POST http://localhost:3002/api/users
 Content-Type: application/json
 
 {
-    "username": "Contempts 3", 
+    "username": "Contempts 2", 
     "name": "charley"
 }
 

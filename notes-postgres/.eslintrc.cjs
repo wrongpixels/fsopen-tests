@@ -18,6 +18,7 @@ module.exports = {
     'playwright.config.js',
     'test-results/**',
     'playwright-report/**',
+    'eslintrc.cjs',
   ],
 
   rules: {
@@ -30,4 +31,4 @@ module.exports = {
     'arrow-spacing': ['error', { before: true, after: true }],
     'no-console': 0,
   },
-};
+}
