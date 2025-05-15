@@ -14,8 +14,9 @@ POST http://localhost:3002/api/users
 Content-Type: application/json
 
 {
-    "username": "Contempts 2", 
-    "name": "charley"
+    "username": "Contempts 23", 
+    "name": "charley",
+    "admin": true
 }
 
 ###LOGIN
@@ -23,14 +24,14 @@ POST http://localhost:3002/api/login
 Content-Type: application/json
 
 {
-    "username": "Contempts 2",
+    "username": "Contempts 23",
     "password": "supersafe"
 }
 
 ###CHANGE USER DISABILITY
-PUT http://localhost:3002/api/users/Contempts 9
+PUT http://localhost:3002/api/users/Contempts 3
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJDb250ZW1wdHMgMyIsImlhdCI6MTc0NzA2NjIyOH0.fYpBxdPdpyHdnvISMV1tH4eN5RFF8g1lTpL63oQe92s
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidXNlcm5hbWUiOiJDb250ZW1wdHMgMjMiLCJpYXQiOjE3NDczMjU3MDF9.XfZ6XqXMfUVyxoYfrT2tBb0FdMtLzkkZILgcU29a3KQ
 
 {
     "disabled": true

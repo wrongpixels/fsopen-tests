@@ -2,6 +2,7 @@ const router = require('express').Router()
 const { User, Note, Team } = require('../models')
 const tokenExtractor = require('../middleware/tokenExtractor')
 const isAdmin = require('../middleware/isAdmin')
+const CustomError = require('../util/customError')
 
 router.get('/', async (req, res, next) => {
   try {
@@ -25,6 +26,16 @@ router.get('/', async (req, res, next) => {
     next(error)
   }
 })
+
+const getUsers = async (admin = false, disabled = false) => {
+  if (admin || disabled) {
+    if (admin && disabled) {
+      return await User.scope('admin', 'disabled').findAll()
+    }
+    return await User.scope(admin ? 'admin' : 'disabled').findAll()
+  }
+  return await User.findAll()
+}
 
 router.get('/:id', async (req, res, next) => {
   try {
@@ -50,15 +61,19 @@ router.get('/:id', async (req, res, next) => {
             attributes: [],
           },
         },
-        {
-          model: Team,
-          through: {
-            attributes: [],
-          },
-        },
       ],
     })
-    res.json(user)
+    if (!user) {
+      throw new CustomError('User not found', 404)
+    }
+    let teams = undefined
+    if (req.query.teams) {
+      teams = await user.getTeams({
+        attributes: ['name'],
+        joinTableAttributes: [],
+      })
+    }
+    res.json({ ...user.toJSON(), teams })
   } catch (error) {
     next(error)
   }
