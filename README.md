@@ -1,2 +1,1 @@
-stuff
- and so much more
+stuff and so much more
